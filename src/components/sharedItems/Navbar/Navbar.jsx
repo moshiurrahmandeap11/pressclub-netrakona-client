@@ -1,0 +1,93 @@
+import React, { useState, useEffect } from 'react';
+import NavItems from './NavItems/NavItems';
+
+const Navbar = () => {
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    // Sample slideshow images - replace with your actual images
+    const slides = [
+        {
+            id: 1,
+            image: "https://images.unsplash.com/photo-1549088521-94b6502fec3d?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        {
+            id: 2,
+            image: "https://images.unsplash.com/photo-1548883151-3b92dbd284dc?q=80&w=1333&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        {
+            id: 3,
+            image: "https://images.unsplash.com/photo-1548678756-aa5ed92c4796?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        {
+            id: 4,
+            image: "https://images.unsplash.com/photo-1548679847-1d4ff48016c7?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        }
+    ];
+
+    // Auto-advance slideshow
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % slides.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, [slides.length]);
+
+    return (
+        <div className="relative">
+            {/* Navbar with Slideshow Background */}
+            <nav className="relative h-24 md:h-28 lg:h-60 text-white rounded-md overflow-hidden">
+                {/* Slideshow Background */}
+                <div className="absolute inset-0">
+                    {slides.map((slide, index) => (
+                        <div
+                            key={slide.id}
+                            className={`absolute inset-0 transition-opacity duration-1000 ${
+                                index === currentSlide ? 'opacity-100' : 'opacity-0'
+                            }`}
+                        >
+                            <div
+                                className="w-full h-full bg-cover bg-center bg-no-repeat"
+                                style={{ backgroundImage: `url(${slide.image})` }}
+                            >
+                                {/* Light blue overlay similar to your image */}
+                                <div className="absolute inset-0  bg-opacity-75"></div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Main Content */}
+                <div className="relative z-20 h-full">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+                        <div className="flex items-center h-full">
+                            {/* Logo and Text Section */}
+                            <div className="flex items-center space-x-4">
+                                {/* Logo */}
+                                <div className="flex-shrink-0">
+                                    <img
+                                        src="https://i.postimg.cc/DwqWkcN1/logo.jpg"
+                                        alt="Press Club Logo"
+                                        className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
+                                        onError={(e) => {
+                                            e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h20v18H2z'/%3E%3Cpath d='M8 21V7a4 4 0 0 1 8 0v14'/%3E%3Cpath d='M6 21h12'/%3E%3C/svg%3E";
+                                        }}
+                                    />
+                                </div>
+                                
+                                {/* Text Content */}
+                                <div className="flex flex-col">
+                                    <h1 className=" text-xl md:text-2xl lg:text-3xl font-bold leading-tight">
+                                        নেত্রকোনা জেলা প্রেস ক্লাব
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <NavItems></NavItems>
+        </div>
+    );
+};
+
+export default Navbar;

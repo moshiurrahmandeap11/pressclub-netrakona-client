@@ -12,7 +12,7 @@ const LastUpdate = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://localhost:3000/last-update');
+        const response = await fetch('https://pressclub-netrakona-server.vercel.app/last-update');
         const data = await response.json();
         setNews(data);
       } catch (error) {

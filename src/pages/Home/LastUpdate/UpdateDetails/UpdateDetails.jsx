@@ -10,7 +10,7 @@ const UpdateDetails = () => {
   useEffect(() => {
     const fetchUpdate = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/last-update/${id}`);
+        const response = await fetch(`https://pressclub-netrakona-server.vercel.app/last-update/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch update");
         }

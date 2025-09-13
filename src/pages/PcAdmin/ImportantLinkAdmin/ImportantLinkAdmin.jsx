@@ -11,7 +11,7 @@ useEffect(() => {
   const fetchLinks = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3000/important-links");
+      const res = await axios.get("https://pressclub-netrakona-server.vercel.app/important-links");
       // Make sure it's always an array
       setLinks(Array.isArray(res.data) ? res.data : []);
     } catch (error) {

@@ -17,7 +17,7 @@ const AddImportantLinks = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:3000/important-links', {
+      const res = await axios.post('https://pressclub-netrakona-server.vercel.app/important-links', {
         title,
         url,
       });

@@ -11,7 +11,7 @@ const EditHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/pc-history");
+        const res = await axios.get("https://pressclub-netrakona-server.vercel.app/pc-history");
         if (res.data.length) {
           const history = res.data[0]; // assuming single history
           setContent(history.description);
@@ -34,7 +34,7 @@ const EditHistory = () => {
         const editorContent = editorRef.current.getContent();
 
         const response = await axios.put(
-          `http://localhost:3000/pc-history/${historyId}`,
+          `https://pressclub-netrakona-server.vercel.app/pc-history/${historyId}`,
           { description: editorContent }
         );
 

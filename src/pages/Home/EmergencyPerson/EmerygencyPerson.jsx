@@ -6,7 +6,7 @@ const EmergencyPerson = () => {
   useEffect(() => {
     const fetchPersons = async () => {
       try {
-        const response = await fetch('http://localhost:3000/important-person');
+        const response = await fetch('https://pressclub-netrakona-server.vercel.app/important-person');
         const data = await response.json();
         setPersons(data);
       } catch (error) {

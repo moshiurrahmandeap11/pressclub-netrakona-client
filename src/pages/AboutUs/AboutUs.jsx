@@ -13,7 +13,7 @@ const AboutUs = () => {
         const fetchData = async () => {
             try {
                 // Replace these with your actual API calls
-                const historyResponse = await fetch('http://localhost:3000/pc-history');
+                const historyResponse = await fetch('https://pressclub-netrakona-server.vercel.app/pc-history');
                 const historyData = await historyResponse.json();
                 setHistory(historyData);
 

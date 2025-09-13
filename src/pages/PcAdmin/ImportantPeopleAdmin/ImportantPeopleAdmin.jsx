@@ -11,7 +11,7 @@ const ImportantPeople = () => {
         const fetchPeople = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("http://localhost:3000/important-person");
+                const res = await axios.get("https://pressclub-netrakona-server.vercel.app/important-person");
                 setPeople(res.data);
             } catch (error) {
                 console.error("ডেটা আনতে সমস্যা:", error);

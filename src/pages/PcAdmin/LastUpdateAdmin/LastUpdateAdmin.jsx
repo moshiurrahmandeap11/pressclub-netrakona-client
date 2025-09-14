@@ -16,7 +16,7 @@ const LastUpdate = () => {
             try {
                 setLoading(true);
                 // ডেটা আনার সময় সর্বশেষ ডেটাগুলো আগে দেখানোর জন্য সর্ট করা হয়েছে
-                const res = await axios.get("https://pressclub-netrakona-server.vercel.app/last-update");
+                const res = await axios.get("http://localhost:3000/last-update");
                 const sortedUpdates = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setUpdates(sortedUpdates);
             } catch (error) {
@@ -36,7 +36,7 @@ const LastUpdate = () => {
         if (isConfirmed) {
             try {
                 // সার্ভারে DELETE রিকোয়েস্ট পাঠানো হচ্ছে
-                await axios.delete(`https://pressclub-netrakona-server.vercel.app/last-update/${id}`);
+                await axios.delete(`http://localhost:3000/last-update/${id}`);
                 
                 // সফলভাবে ডিলিট হলে UI থেকে আপডেটটি মুছে ফেলা হচ্ছে
                 setUpdates(currentUpdates => currentUpdates.filter(update => update._id !== id));

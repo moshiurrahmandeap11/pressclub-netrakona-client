@@ -124,7 +124,7 @@ const Administration = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {data.map((person, index) => (
+              {data.map((person) => (
                 <tr
                   key={person.id}
                   className="hover:bg-gray-50 transition-colors"
@@ -171,7 +171,7 @@ const Administration = () => {
 
       {/* Mobile Card View */}
       <div className="lg:hidden space-y-4">
-        {data.map((person, index) => (
+        {data.map((person) => (
           <div
             key={person.id}
             className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600"

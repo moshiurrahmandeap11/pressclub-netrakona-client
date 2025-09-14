@@ -72,7 +72,7 @@ const AddImportantPerson = () => {
 
     try {
       setIsSubmitting(true);
-      const apiResponse = await fetch('https://pressclub-netrakona-server.vercel.app/important-person', {
+      const apiResponse = await fetch('http://localhost:3000/important-person', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

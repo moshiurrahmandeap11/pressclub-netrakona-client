@@ -13,10 +13,12 @@
     "@tailwindcss/vite": "^4.1.13",
     "@tinymce/tinymce-react": "^6.3.0",
     "axios": "^1.11.0",
+    "dompurify": "^3.2.6",
     "lucide-react": "^0.542.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router": "^7.8.2",
+    "sweetalert2": "^11.23.0",
     "tailwindcss": "^4.1.13"
   },
   "devDependencies": {

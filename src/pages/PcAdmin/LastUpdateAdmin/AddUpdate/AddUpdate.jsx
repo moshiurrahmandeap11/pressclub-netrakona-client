@@ -79,7 +79,7 @@ const AddUpdate = () => {
 
         try {
             setIsSubmitting(true);
-            const apiResponse = await fetch('https://pressclub-netrakona-server.vercel.app/last-update', {
+            const apiResponse = await fetch('http://localhost:3000/last-update', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

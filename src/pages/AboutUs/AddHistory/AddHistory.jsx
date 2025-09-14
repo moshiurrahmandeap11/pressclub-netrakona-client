@@ -15,7 +15,7 @@ const AddHistory = () => {
         console.log('Content to submit:', editorContent);
 
         // Submit to API
-        const response = await fetch('https://pressclub-netrakona-server.vercel.app/pc-history', {
+        const response = await fetch('http://localhost:3000/pc-history', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const AddHistory = () => {
         paste_data_images: true,
         
         // ImgBB image upload handler
-        images_upload_handler: async (blobInfo, success, failure, progress) => {
+        images_upload_handler: async (blobInfo, success, failure) => {
           try {
             const formData = new FormData();
             formData.append('image', blobInfo.blob(), blobInfo.filename());
@@ -125,7 +125,7 @@ const AddHistory = () => {
                 try {
                   const formData = new FormData();
                   formData.append('image', file, file.name);
-                  formData.append('key', 'YOUR_IMGBB_API_KEY'); // Replace with your ImgBB API key
+                  formData.append('key', 'bf35be486f2b0f4b0c48958fcc4de90c'); // Replace with your ImgBB API key
 
                   const response = await fetch('https://api.imgbb.com/1/upload', {
                     method: 'POST',

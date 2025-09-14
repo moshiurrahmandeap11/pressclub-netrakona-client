@@ -12,7 +12,7 @@ const LastUpdate = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('https://pressclub-netrakona-server.vercel.app/last-update');
+        const response = await fetch('http://localhost:3000/last-update');
         const data = await response.json();
         setNews(data);
       } catch (error) {
@@ -108,7 +108,7 @@ const LastUpdate = () => {
       <div className="mt-4 flex justify-end">
         <button
           onClick={handleButtonClick}
-          className="px-4 py-2 bg-blue-600 cursor-pointer text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-green-600 cursor-pointer text-white rounded-md hover:bg-blue-700 transition-colors"
         >
           সকল খবর
         </button>

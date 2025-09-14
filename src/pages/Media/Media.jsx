@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router';
 
 const Media = () => {
     const [activeTab, setActiveTab] = useState('Electronic');
     const [electronicMedia, setElectronicMedia] = useState([]);
     const [printMedia, setPrintMedia] = useState([]);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
+
+    // Set active tab from navigation state
+    useEffect(() => {
+        const tabFromState = location.state?.tab;
+        if (tabFromState && ['Electronic', 'Print'].includes(tabFromState)) {
+            setActiveTab(tabFromState);
+        }
+    }, [location.state]);
 
     // Mock API calls - replace with your actual API endpoints
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Replace these with your actual API calls
-                // const electronicResponse = await fetch('/api/electronic-media');
-                // const electronicData = await electronicResponse.json();
                 setElectronicMedia([
                     {
                         id: 1,
@@ -51,8 +59,6 @@ const Media = () => {
                     }
                 ]);
 
-                // const printResponse = await fetch('/api/print-media');
-                // const printData = await printResponse.json();
                 setPrintMedia([
                     {
                         id: 1,

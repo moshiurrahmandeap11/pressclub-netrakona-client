@@ -5,6 +5,7 @@ import EmerygencyPerson from "./EmergencyPerson/EmerygencyPerson";
 import Calendar from "./Calendar/Calendar";
 import ImportantLinks from "./ImportantLinks/ImportantLinks";
 import EmergencyHotline from "./EmerygencyHotline/EmergencyHotline";
+import Slider from "./Slider/Slider";
 
 const Home = () => {
   return (
@@ -14,6 +15,7 @@ const Home = () => {
         <div className="lg:col-span-8 space-y-4">
           <LastUpdate />
           <HomeElement />
+          <Slider></Slider>
         </div>
         
         {/* Divider */}

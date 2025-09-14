@@ -8,7 +8,7 @@ const ImportantLinks = () => {
   useEffect(() => {
     const fetchLinks = async () => {
       try {
-        const res = await axios.get("https://pressclub-netrakona-server.vercel.app/important-links");
+        const res = await axios.get("http://localhost:3000/important-links");
         setLinks(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error("Failed to fetch links:", error);

@@ -1,25 +1,94 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useLocation } from 'react-router';
+import DOMPurify from 'dompurify';
+
 
 const AboutUs = () => {
-    const [activeTab, setActiveTab] = useState('ইতিহাস');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const location = useLocation();
+    const [activeTab, setActiveTab] = useState('ইতিহাস ও কার্যাবলী');
     const [history, setHistory] = useState('');
     const [objectives, setObjectives] = useState('');
     const [committeeMembers, setCommitteeMembers] = useState([]);
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [achievement, setAchievements] = useState([])
 
+  useEffect(() => {
+    const tryFetching = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/achievement");
+        setAchievements(res.data);
+      } catch (error) {
+        console.log("failed to get achievement", error);
+      }
+    };
+
+    tryFetching();
+  }, []);
+
+    // Tab mapping object - Fixed to match sidebar
+    const tabMapping = {
+        'history': 'ইতিহাস ও কার্যাবলী',
+        'mission': 'মিশন ও ভিশন',
+        'members': 'সাংগঠনিক কাঠামো',
+        'success': 'সাফল্য ও অর্জন',
+        'member-list': 'সদস্য তালিকা'
+    };
+
+    // Reverse mapping for URL generation
+    const reverseTabMapping = {
+        'ইতিহাস ও কার্যাবলী': 'history',
+        'মিশন ও ভিশন': 'mission',
+        'সাংগঠনিক কাঠামো': 'members',
+        'সাফল্য ও অর্জন': 'success',
+        'সদস্য তালিকা': 'member-list'
+    };
+
+    // Effect to handle URL parameters and set active tab
+    useEffect(() => {
+        const tabParam = searchParams.get('tab');
+        if (tabParam && tabMapping[tabParam]) {
+            setActiveTab(tabMapping[tabParam]);
+        }
+    }, [searchParams, location]);
+
+    // Handle tab change
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        // Update URL parameter
+        setSearchParams({ tab: reverseTabMapping[tab] });
+    };
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/mishon-vishon");
+      setObjectives(res.data); // res.data কে string বানানো দরকার নেই
+    } catch  {
+      alert("Failed to load mishon-vishon");
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+const image = (objectives?.[0]?.mishonVishon?.mishonVishon?.image);
+
+    
     // Mock API calls - replace with your actual API endpoints
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Replace these with your actual API calls
-                const historyResponse = await fetch('https://pressclub-netrakona-server.vercel.app/pc-history');
+                const historyResponse = await fetch('http://localhost:3000/pc-history');
                 const historyData = await historyResponse.json();
                 setHistory(historyData);
 
                 // const objectivesResponse = await fetch('/api/objectives');
                 // const objectivesData = await objectivesResponse.json();
-                setObjectives('এখানে আদর্শ ও উদ্দেশ্য সম্পর্কিত তথ্য প্রদর্শিত হবে...');
 
                 // const committeeResponse = await fetch('/api/committee-members');
                 // const committeeData = await committeeResponse.json();
@@ -76,10 +145,11 @@ const AboutUs = () => {
     }, []);
 
     const tabs = [
-        'ইতিহাস',
-        'আদর্শ ও উদ্দেশ্য',
-        'সদস্যব্রিন্দ',
-        'অসাংবাদিক সদস্য'
+        'ইতিহাস ও কার্যাবলী',
+        'মিশন ও ভিশন',
+        'সাংগঠনিক কাঠামো',
+        'সাফল্য ও অর্জন',
+        'সদস্য তালিকা'
     ];
 
     if (loading) {
@@ -99,7 +169,7 @@ const AboutUs = () => {
                         {tabs.map((tab) => (
                             <button
                                 key={tab}
-                                onClick={() => setActiveTab(tab)}
+                                onClick={() => handleTabChange(tab)}
                                 className={`px-6 py-3 font-medium text-sm md:text-base ${
                                     activeTab === tab
                                         ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
@@ -114,29 +184,34 @@ const AboutUs = () => {
 
                 {/* Tab Content */}
                 <div className="bg-white rounded-lg shadow-md p-6">
-{activeTab === 'ইতিহাস' && (
-  <div>
-    <h2 className="text-2xl font-bold text-gray-800 mb-4">ইতিহাস</h2>
+                    {activeTab === 'ইতিহাস ও কার্যাবলী' && (
+                        <div id="history">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-4">ইতিহাস ও কার্যাবলী</h2>
+                            <div
+                                className="text-gray-700 leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: history[0]?.description || 'এখনও ইতিহাস যোগ করা হয়নি।' }}
+                            ></div>
+                        </div>
+                    )}
+{activeTab === 'মিশন ও ভিশন' && (
+  <div id="mission">
+    <h2 className="text-2xl font-bold text-gray-800 mb-4">মিশন ও ভিশন</h2>
+    <img src={image} alt="" />
     <div
-      className="text-gray-700 leading-relaxed"
-      dangerouslySetInnerHTML={{ __html: history[0]?.description || 'এখনও ইতিহাস যোগ করা হয়নি।' }}
-    ></div>
+      className="text-gray-700 leading-relaxed prose max-w-none"
+      dangerouslySetInnerHTML={{
+        __html: DOMPurify.sanitize(
+          objectives[0]?.mishonVishon?.mishonVishon?.details || 'এখনও মিশন/ভিশন যোগ করা হয়নি।'
+        ),
+      }}
+    />
   </div>
 )}
 
 
-                    {activeTab === 'আদর্শ ও উদ্দেশ্য' && (
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-800 mb-4">আদর্শ ও উদ্দেশ্য</h2>
-                            <div className="text-gray-700 leading-relaxed">
-                                <p>{objectives}</p>
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'সদস্যব্রিন্দ' && (
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6">সদস্যব্রিন্দ</h2>
+                    {activeTab === 'সাংগঠনিক কাঠামো' && (
+                        <div id="members">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-6">সাংগঠনিক কাঠামো</h2>
                             
                             {/* Committee Members Table */}
                             <div className="mb-8">
@@ -211,10 +286,54 @@ const AboutUs = () => {
                             </div>
                         </div>
                     )}
+{activeTab === 'সাফল্য ও অর্জন' && (
+  <div id="success">
+    <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">সাফল্য ও অর্জন</h2>
 
-                    {activeTab === 'অসাংবাদিক সদস্য' && (
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6">অসাংবাদিক সদস্য</h2>
+    {achievement?.length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {achievement.map((item) => (
+          <div 
+            key={item._id} 
+            className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition duration-300"
+          >
+            {/* Image */}
+            {item.image && (
+              <img 
+                src={item.image} 
+                alt={item.title} 
+                className="w-full h-48 object-cover"
+              />
+            )}
+
+            {/* Content */}
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                {item.title}
+              </h3>
+
+              {/* Key Features */}
+              {item.features && (
+                <ul className="list-disc list-inside text-gray-600 space-y-1 text-sm">
+                  {item.features.split(",").map((feature, idx) => (
+                    <li key={idx}>{feature.trim()}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p className="text-center text-gray-500">কোনো অর্জন পাওয়া যায়নি...</p>
+    )}
+  </div>
+)}
+
+
+                    {activeTab === 'সদস্য তালিকা' && (
+                        <div id="member-list">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-6">সদস্য তালিকা</h2>
                             <div className="overflow-x-auto">
                                 <table className="min-w-full bg-white border border-gray-200">
                                     <thead>

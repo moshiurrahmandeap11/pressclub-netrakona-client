@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import NavItems from './NavItems/NavItems';
 
 const Navbar = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [slides, setSlides] = useState([]);
 
-    // Sample slideshow images - replace with your actual images
-    const slides = [
-        {
-            id: 1,
-            image: "https://images.unsplash.com/photo-1549088521-94b6502fec3d?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        },
-        {
-            id: 2,
-            image: "https://images.unsplash.com/photo-1548883151-3b92dbd284dc?q=80&w=1333&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        },
-        {
-            id: 3,
-            image: "https://images.unsplash.com/photo-1548678756-aa5ed92c4796?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        },
-        {
-            id: 4,
-            image: "https://images.unsplash.com/photo-1548679847-1d4ff48016c7?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        }
-    ];
+    // Fetch slides from API
+    useEffect(() => {
+        const fetchSlides = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/header-slide');
+                setSlides(response.data);
+            } catch (error) {
+                console.error('Error fetching slides:', error);
+            }
+        };
+        fetchSlides();
+    }, []);
 
     // Auto-advance slideshow
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % slides.length);
-        }, 5000);
-        return () => clearInterval(timer);
+        if (slides.length > 0) {
+            const timer = setInterval(() => {
+                setCurrentSlide((prev) => (prev + 1) % slides.length);
+            }, 5000);
+            return () => clearInterval(timer);
+        }
     }, [slides.length]);
 
     return (
@@ -38,22 +35,28 @@ const Navbar = () => {
             <nav className="relative h-24 md:h-28 lg:h-60 text-white rounded-md overflow-hidden">
                 {/* Slideshow Background */}
                 <div className="absolute inset-0">
-                    {slides.map((slide, index) => (
-                        <div
-                            key={slide.id}
-                            className={`absolute inset-0 transition-opacity duration-1000 ${
-                                index === currentSlide ? 'opacity-100' : 'opacity-0'
-                            }`}
-                        >
+                    {slides.length > 0 ? (
+                        slides.map((slide, index) => (
                             <div
-                                className="w-full h-full bg-cover bg-center bg-no-repeat"
-                                style={{ backgroundImage: `url(${slide.image})` }}
+                                key={slide._id}
+                                className={`absolute inset-0 transition-opacity duration-1000 ${
+                                    index === currentSlide ? 'opacity-100' : 'opacity-0'
+                                }`}
                             >
-                                {/* Light blue overlay similar to your image */}
-                                <div className="absolute inset-0  bg-opacity-75"></div>
+                                <div
+                                    className="w-full h-full bg-cover bg-center bg-no-repeat"
+                                    style={{ backgroundImage: `url(${slide.images.images.imageUrl})` }}
+                                >
+                                    {/* Light blue overlay */}
+                                    <div className="absolute inset-0  bg-opacity-75"></div>
+                                </div>
                             </div>
+                        ))
+                    ) : (
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                            No slides available
                         </div>
-                    ))}
+                    )}
                 </div>
 
                 {/* Main Content */}
@@ -69,14 +72,15 @@ const Navbar = () => {
                                         alt="Press Club Logo"
                                         className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
                                         onError={(e) => {
-                                            e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h20v18H2z'/%3E%3Cpath d='M8 21V7a4 4 0 0 1 8 0v14'/%3E%3Cpath d='M6 21h12'/%3E%3C/svg%3E";
+                                            e.target.src =
+                                                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h20v18H2z'/%3E%3Cpath d='M8 21V7a4 4 0 0 1 8 0v14'/%3E%3Cpath d='M6 21h12'/%3E%3C/svg%3E";
                                         }}
                                     />
                                 </div>
-                                
+
                                 {/* Text Content */}
                                 <div className="flex flex-col">
-                                    <h1 className=" text-xl md:text-2xl lg:text-3xl font-bold leading-tight">
+                                    <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight">
                                         নেত্রকোনা জেলা প্রেস ক্লাব
                                     </h1>
                                 </div>
@@ -85,7 +89,7 @@ const Navbar = () => {
                     </div>
                 </div>
             </nav>
-            <NavItems></NavItems>
+            <NavItems />
         </div>
     );
 };

@@ -31,7 +31,7 @@ const EditUpdate = () => {
         const fetchUpdateData = async () => {
             try {
                 setIsLoading(true);
-                const res = await axios.get(`https://pressclub-netrakona-server.vercel.app/last-update/${id}`);
+                const res = await axios.get(`http://localhost:3000/last-update/${id}`);
                 const data = res.data;
                 
                 // Populate states with fetched data
@@ -109,7 +109,7 @@ const EditUpdate = () => {
         };
 
         try {
-            await axios.put(`https://pressclub-netrakona-server.vercel.app/last-update/${id}`, payload);
+            await axios.put(`http://localhost:3000/last-update/${id}`, payload);
             alert('আপডেট সফলভাবে সম্পন্ন হয়েছে!');
             navigate(-1); // সফলভাবে আপডেট হলে আগের পেজে ফেরত যাওয়া
 

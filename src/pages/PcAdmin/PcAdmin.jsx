@@ -4,6 +4,10 @@ import ImportantPeople from "./ImportantPeopleAdmin/ImportantPeopleAdmin";
 import ImportantLinks from "./ImportantLinkAdmin/ImportantLinkAdmin";
 import Sidebar from "./Sidebar/Sidebar";
 import PcHistory from "./PcHistory/PcHistory";
+import HeaderSlideShow from "./HeaderSlideShow/HeaderSlideShow";
+import SliderAdmin from "./SliderAdmin/SliderAdmin";
+import MIshonVishon from "./MIshonVishon/MIshonVishon";
+import Achievement from "./Achievement/Achievement";
 
 const PcAdmin = () => {
   const [currentView, setCurrentView] = useState("updates");
@@ -22,6 +26,14 @@ const PcAdmin = () => {
         return <ImportantLinks />;
       case "history":
         return <PcHistory></PcHistory>;
+      case "headerslideshow":
+        return <HeaderSlideShow></HeaderSlideShow>;
+      case "slider":
+        return <SliderAdmin></SliderAdmin>;
+      case "mishon-vishon":
+        return <MIshonVishon></MIshonVishon>;
+      case "achievement":
+        return <Achievement></Achievement>;
       default:
         return <LastUpdate />;
     }

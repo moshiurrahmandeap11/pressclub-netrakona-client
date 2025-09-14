@@ -13,20 +13,22 @@ const NavItems = () => {
       <NavLink
         to="/"
         className={({ isActive }) =>
-          `flex-1 text-center px-4 py-2 text-gray-800 hover:text-blue-600 transition-colors ${
-            isActive ? 'text-blue-600 font-bold' : ''
-          }`
+          `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
+           transition-all duration-300 ease-in-out 
+           hover:bg-green-400 hover:scale-105 hover:shadow-lg 
+           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
         }
-        onClick={() => setIsOpen(false)} // Close menu on link click
+        onClick={() => setIsOpen(false)}
       >
         হোম
       </NavLink>
       <NavLink
         to="/about-us"
         className={({ isActive }) =>
-          `flex-1 text-center px-4 py-2 text-gray-800 hover:text-blue-600 transition-colors ${
-            isActive ? 'text-blue-600 font-bold' : ''
-          }`
+          `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
+           transition-all duration-300 ease-in-out 
+           hover:bg-green-400 hover:scale-105 hover:shadow-lg 
+           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -35,9 +37,10 @@ const NavItems = () => {
       <NavLink
         to="/administration"
         className={({ isActive }) =>
-          `flex-1 text-center px-4 py-2 text-gray-800 hover:text-blue-600 transition-colors ${
-            isActive ? 'text-blue-600 font-bold' : ''
-          }`
+          `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
+           transition-all duration-300 ease-in-out 
+           hover:bg-green-400 hover:scale-105 hover:shadow-lg 
+           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -46,9 +49,10 @@ const NavItems = () => {
       <NavLink
         to="/media"
         className={({ isActive }) =>
-          `flex-1 text-center px-4 py-2 text-gray-800 hover:text-blue-600 transition-colors ${
-            isActive ? 'text-blue-600 font-bold' : ''
-          }`
+          `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
+           transition-all duration-300 ease-in-out 
+           hover:bg-green-400 hover:scale-105 hover:shadow-lg 
+           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -57,9 +61,10 @@ const NavItems = () => {
       <NavLink
         to="/committee"
         className={({ isActive }) =>
-          `flex-1 text-center px-4 py-2 text-gray-800 hover:text-blue-600 transition-colors ${
-            isActive ? 'text-blue-600 font-bold' : ''
-          }`
+          `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
+           transition-all duration-300 ease-in-out 
+           hover:bg-green-400 hover:scale-105 hover:shadow-lg 
+           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -68,9 +73,10 @@ const NavItems = () => {
       <NavLink
         to="/gallery"
         className={({ isActive }) =>
-          `flex-1 text-center px-4 py-2 text-gray-800 hover:text-blue-600 transition-colors ${
-            isActive ? 'text-blue-600 font-bold' : ''
-          }`
+          `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
+           transition-all duration-300 ease-in-out 
+           hover:bg-green-400 hover:scale-105 hover:shadow-lg 
+           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -79,9 +85,10 @@ const NavItems = () => {
       <NavLink
         to="/contact"
         className={({ isActive }) =>
-          `flex-1 text-center px-4 py-2 text-gray-800 hover:text-blue-600 transition-colors ${
-            isActive ? 'text-blue-600 font-bold' : ''
-          }`
+          `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
+           transition-all duration-300 ease-in-out 
+           hover:bg-green-400 hover:scale-105 hover:shadow-lg 
+           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -92,12 +99,12 @@ const NavItems = () => {
 
   return (
     <div className="w-full">
-      <nav className="bg-white shadow-md">
+      <nav className="bg-gradient-to-r from-teal-600 to-green-500 shadow-xl">
         {/* Hamburger Button for Mobile */}
         <div className="md:hidden flex justify-end p-4">
           <button
             onClick={toggleMenu}
-            className="text-gray-800 focus:outline-none"
+            className="text-white focus:outline-none hover:bg-green-400 p-2 rounded-full transition-colors duration-300"
             aria-label="Toggle menu"
           >
             <svg
@@ -120,7 +127,7 @@ const NavItems = () => {
         <div
           className={`${
             isOpen ? 'flex' : 'hidden'
-          } md:flex flex-col md:flex-row justify-between items-center w-full px-4 pb-4 md:pb-0 md:px-4`}
+          } md:flex flex-col md:flex-row justify-center items-center w-full px-6 py-4 md:py-2 gap-3 md:gap-4`}
         >
           {navItems}
         </div>

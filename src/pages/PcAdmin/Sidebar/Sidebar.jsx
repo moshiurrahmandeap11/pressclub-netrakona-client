@@ -34,6 +34,30 @@ const Sidebar = ({ onViewChange, currentView }) => {
                     >
                         প্রেস ক্লাবের ইতিহাস 
                     </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'headerslideshow' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('headerslideshow')}
+                    >
+                        ন্যাভবার স্লাইড শো  
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'slider' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('slider')}
+                    >
+                        স্লাইডার  
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'mishon-vishon' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('mishon-vishon')}
+                    >
+                        মিশন ও ভিশন   
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'achievement' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('achievement')}
+                    >
+                        সাফল্য ও অর্জন   
+                    </li>
                 </ul>
             </nav>
         </aside>

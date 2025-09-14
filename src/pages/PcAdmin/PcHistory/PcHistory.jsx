@@ -9,7 +9,7 @@ const navigate = useNavigate();
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/pc-history");
+        const res = await axios.get("https://pressclub-netrakona-server.vercel.app/pc-history");
         // Assuming API returns array, take the first item if exists
         setHistory(res.data.length ? res.data[0] : null);
       } catch (err) {

@@ -10,7 +10,7 @@ const Navbar = () => {
     useEffect(() => {
         const fetchSlides = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/header-slide');
+                const response = await axios.get('https://pressclub-netrakona-server.vercel.app/header-slide');
                 setSlides(response.data);
             } catch (error) {
                 console.error('Error fetching slides:', error);

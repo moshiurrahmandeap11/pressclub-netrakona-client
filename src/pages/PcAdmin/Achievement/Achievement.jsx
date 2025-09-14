@@ -23,7 +23,7 @@ const Achievement = () => {
     useEffect(() => {
         const fetchAchievements = async () => {
             try {
-                const response = await fetch('http://localhost:3000/achievement');
+                const response = await fetch('https://pressclub-netrakona-server.vercel.app/achievement');
                 const data = await response.json();
                 // Ensure achievements is an array and filter out invalid entries
                 setAchievements(Array.isArray(data) ? data.filter(item => item && typeof item === 'object') : []);
@@ -85,7 +85,7 @@ const Achievement = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`http://localhost:3000/achievement/${id}`, {
+                const response = await fetch(`https://pressclub-netrakona-server.vercel.app/achievement/${id}`, {
                     method: 'DELETE'
                 });
 
@@ -150,7 +150,7 @@ const Achievement = () => {
 
             let response;
 if (editMode) {
-    response = await fetch(`http://localhost:3000/achievement/${selectedAchievement._id}`, {
+    response = await fetch(`https://pressclub-netrakona-server.vercel.app/achievement/${selectedAchievement._id}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ if (editMode) {
 }
  else {
                 // Add new achievement
-                response = await fetch('http://localhost:3000/achievement', {
+                response = await fetch('https://pressclub-netrakona-server.vercel.app/achievement', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

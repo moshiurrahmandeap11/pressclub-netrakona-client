@@ -15,7 +15,7 @@ const AddHistory = () => {
         console.log('Content to submit:', editorContent);
 
         // Submit to API
-        const response = await fetch('http://localhost:3000/pc-history', {
+        const response = await fetch('https://pressclub-netrakona-server.vercel.app/pc-history', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

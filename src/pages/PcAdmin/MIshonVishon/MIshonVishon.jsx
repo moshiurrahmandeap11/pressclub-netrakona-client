@@ -18,7 +18,7 @@ const MissionVision = () => {
 
   const fetchMissionVisions = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/mishon-vishon');
+      const res = await axios.get('https://pressclub-netrakona-server.vercel.app/mishon-vishon');
       setMissionVisions(res.data);
     } catch (err) {
       console.error(err);
@@ -98,10 +98,10 @@ const MissionVision = () => {
 
     try {
       if (editingId) {
-        await axios.patch(`http://localhost:3000/mishon-vishon/${editingId}`, payload);
+        await axios.patch(`https://pressclub-netrakona-server.vercel.app/mishon-vishon/${editingId}`, payload);
         Swal.fire('Updated', 'Mission Vision updated successfully', 'success');
       } else {
-        await axios.post('http://localhost:3000/mishon-vishon', payload);
+        await axios.post('https://pressclub-netrakona-server.vercel.app/mishon-vishon', payload);
         Swal.fire('Added', 'Mission Vision added successfully', 'success');
       }
       handleCloseModal();
@@ -124,7 +124,7 @@ const MissionVision = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:3000/mishon-vishon/${id}`);
+        await axios.delete(`https://pressclub-netrakona-server.vercel.app/mishon-vishon/${id}`);
         Swal.fire('Deleted', 'Mission Vision deleted', 'success');
         fetchMissionVisions();
       } catch  {

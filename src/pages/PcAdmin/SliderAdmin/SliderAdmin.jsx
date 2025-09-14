@@ -19,7 +19,7 @@ const SliderAdmin = () => {
   const fetchSlides = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:3000/slider');
+      const response = await fetch('https://pressclub-netrakona-server.vercel.app/slider');
       if (response.ok) {
         const data = await response.json();
         console.log('Fetched slides:', data);
@@ -111,7 +111,7 @@ const SliderAdmin = () => {
         }
       };
 
-      const apiResponse = await fetch('http://localhost:3000/slider', {
+      const apiResponse = await fetch('https://pressclub-netrakona-server.vercel.app/slider', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ const SliderAdmin = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:3000/slider/${slideId}`, {
+        const response = await fetch(`https://pressclub-netrakona-server.vercel.app/slider/${slideId}`, {
           method: 'DELETE'
         });
 

@@ -16,7 +16,7 @@ const ImportantLinks = () => {
     const fetchLinks = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://localhost:3000/important-links');
+        const res = await axios.get('https://pressclub-netrakona-server.vercel.app/important-links');
         setLinks(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error('Failed to fetch links:', error);
@@ -49,8 +49,8 @@ const ImportantLinks = () => {
     }
 
     try {
-      await axios.put(`http://localhost:3000/important-links/${selectedLink._id}`, formData);
-      const res = await axios.get('http://localhost:3000/important-links');
+      await axios.put(`https://pressclub-netrakona-server.vercel.app/important-links/${selectedLink._id}`, formData);
+      const res = await axios.get('https://pressclub-netrakona-server.vercel.app/important-links');
       setLinks(Array.isArray(res.data) ? res.data : []);
       setIsModalOpen(false);
       setSelectedLink(null);
@@ -77,8 +77,8 @@ const ImportantLinks = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:3000/important-links/${id}`);
-        const res = await axios.get('http://localhost:3000/important-links');
+        await axios.delete(`https://pressclub-netrakona-server.vercel.app/important-links/${id}`);
+        const res = await axios.get('https://pressclub-netrakona-server.vercel.app/important-links');
         setLinks(Array.isArray(res.data) ? res.data : []);
         Swal.fire('Deleted!', 'The link has been deleted.', 'success');
       } catch (error) {

@@ -18,7 +18,7 @@ const AboutUs = () => {
   useEffect(() => {
     const tryFetching = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/achievement");
+        const res = await axios.get("https://pressclub-netrakona-server.vercel.app/achievement");
         setAchievements(res.data);
       } catch (error) {
         console.log("failed to get achievement", error);
@@ -64,7 +64,7 @@ const AboutUs = () => {
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/mishon-vishon");
+      const res = await axios.get("https://pressclub-netrakona-server.vercel.app/mishon-vishon");
       setObjectives(res.data); // res.data কে string বানানো দরকার নেই
     } catch  {
       alert("Failed to load mishon-vishon");
@@ -83,7 +83,7 @@ const image = (objectives?.[0]?.mishonVishon?.mishonVishon?.image);
         const fetchData = async () => {
             try {
                 // Replace these with your actual API calls
-                const historyResponse = await fetch('http://localhost:3000/pc-history');
+                const historyResponse = await fetch('https://pressclub-netrakona-server.vercel.app/pc-history');
                 const historyData = await historyResponse.json();
                 setHistory(historyData);
 

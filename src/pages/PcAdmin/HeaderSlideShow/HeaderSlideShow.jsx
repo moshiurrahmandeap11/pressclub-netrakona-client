@@ -13,7 +13,7 @@ const HeaderSlideShow = () => {
     useEffect(() => {
         const fetchSlides = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/header-slide');
+                const response = await axios.get('https://pressclub-netrakona-server.vercel.app/header-slide');
                 setSlides(response.data);
             } catch (error) {
                 console.error('Error fetching slides:', error);
@@ -53,10 +53,10 @@ const HeaderSlideShow = () => {
             const imageUrl = response.data.data.url;
 
             // Post to your API with correct nested structure
-            await axios.post('http://localhost:3000/header-slide', { images: { images: { imageUrl } } });
+            await axios.post('https://pressclub-netrakona-server.vercel.app/header-slide', { images: { images: { imageUrl } } });
 
             // Refresh slides
-            const updatedSlides = await axios.get('http://localhost:3000/header-slide');
+            const updatedSlides = await axios.get('https://pressclub-netrakona-server.vercel.app/header-slide');
             setSlides(updatedSlides.data);
 
             // Close modal and reset
@@ -86,9 +86,9 @@ const HeaderSlideShow = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:3000/header-slide/${id}`);
+                await axios.delete(`https://pressclub-netrakona-server.vercel.app/header-slide/${id}`);
                 // Refresh slides
-                const updatedSlides = await axios.get('http://localhost:3000/header-slide');
+                const updatedSlides = await axios.get('https://pressclub-netrakona-server.vercel.app/header-slide');
                 setSlides(updatedSlides.data);
                 Swal.fire('Deleted!', 'The image has been deleted.', 'success');
             } catch (error) {

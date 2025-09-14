@@ -21,7 +21,7 @@ const ImportantPeople = () => {
     const fetchPeople = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:3000/important-person");
+        const res = await axios.get("https://pressclub-netrakona-server.vercel.app/important-person");
         setPeople(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error("ডেটা আনতে সমস্যা:", error);
@@ -80,11 +80,11 @@ const ImportantPeople = () => {
       };
 
       await axios.put(
-        `http://localhost:3000/important-person/${selectedPerson._id}`,
+        `https://pressclub-netrakona-server.vercel.app/important-person/${selectedPerson._id}`,
         updateData
       );
       
-      const res = await axios.get("http://localhost:3000/important-person");
+      const res = await axios.get("https://pressclub-netrakona-server.vercel.app/important-person");
       setPeople(Array.isArray(res.data) ? res.data : []);
       setIsModalOpen(false);
       setSelectedPerson(null);
@@ -111,8 +111,8 @@ const ImportantPeople = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:3000/important-person/${id}`);
-        const res = await axios.get("http://localhost:3000/important-person");
+        await axios.delete(`https://pressclub-netrakona-server.vercel.app/important-person/${id}`);
+        const res = await axios.get("https://pressclub-netrakona-server.vercel.app/important-person");
         setPeople(Array.isArray(res.data) ? res.data : []);
         Swal.fire("Deleted!", "The person has been deleted.", "success");
       } catch (error) {

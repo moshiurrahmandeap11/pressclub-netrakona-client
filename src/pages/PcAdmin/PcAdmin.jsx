@@ -8,6 +8,12 @@ import HeaderSlideShow from "./HeaderSlideShow/HeaderSlideShow";
 import SliderAdmin from "./SliderAdmin/SliderAdmin";
 import MIshonVishon from "./MIshonVishon/MIshonVishon";
 import Achievement from "./Achievement/Achievement";
+import MemberList from "./MemberList/MemberList";
+import AdminsTrationAdmin from "./AdminstrationAdmin/AdminsTrationAdmin";
+import MediaAdmin from "./MediaAdmin/MediaAdmin";
+import CommitteeAdmin from "./CommitteeAdmin/CommitieeAdmin";
+import GalleryAdmin from "./GalleryAdmin/GalleryAdmin";
+import ContactAdmin from "./ContactAdmin/ContactAdmin";
 
 const PcAdmin = () => {
   const [currentView, setCurrentView] = useState("updates");
@@ -34,6 +40,18 @@ const PcAdmin = () => {
         return <MIshonVishon></MIshonVishon>;
       case "achievement":
         return <Achievement></Achievement>;
+      case "member-list":
+        return <MemberList></MemberList>;
+      case "adminstration":
+        return <AdminsTrationAdmin></AdminsTrationAdmin>;
+      case "media":
+        return <MediaAdmin></MediaAdmin>;
+      case "committee":
+        return <CommitteeAdmin></CommitteeAdmin>;
+      case "gallery":
+        return <GalleryAdmin></GalleryAdmin>;
+      case "contact":
+        return <ContactAdmin></ContactAdmin>;
       default:
         return <LastUpdate />;
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NavItems from './NavItems/NavItems';
+import logo from "../../../assets/logo.jpg"
 
 const Navbar = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -68,7 +69,7 @@ const Navbar = () => {
                                 {/* Logo */}
                                 <div className="flex-shrink-0">
                                     <img
-                                        src="https://i.postimg.cc/DwqWkcN1/logo.jpg"
+                                        src={logo}
                                         alt="Press Club Logo"
                                         className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
                                         onError={(e) => {

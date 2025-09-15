@@ -13,7 +13,8 @@ const AboutUs = () => {
     const [committeeMembers, setCommitteeMembers] = useState([]);
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [achievement, setAchievements] = useState([])
+    const [achievement, setAchievements] = useState([]);
+    const [memberListLoading, setMemberListLoading] = useState(false);
 
   useEffect(() => {
     const tryFetching = async () => {
@@ -60,6 +61,52 @@ const AboutUs = () => {
         // Update URL parameter
         setSearchParams({ tab: reverseTabMapping[tab] });
     };
+
+    // Fetch member list from API
+    const fetchMemberList = async () => {
+        try {
+            setMemberListLoading(true);
+            const response = await axios.get('https://pressclub-netrakona-server.vercel.app/member-list');
+            // Map _id to id for frontend consistency and extract member data
+            const formattedMembers = response.data.map(item => ({
+                id: item._id,
+                ...item.member,
+                createdAt: item.createdAt,
+                updatedAt: item.updatedAt
+            }));
+            setMembers(formattedMembers);
+        } catch (error) {
+            console.error('Failed to fetch member list:', error);
+            // Keep the mock data as fallback
+            setMembers([
+                {
+                    id: 1,
+                    name: 'মোঃ সালাম খান',
+                    designation: 'কর্মকর্তা',
+                    occupation: 'শিক্ষক',
+                    address: 'সিলেট, বাংলাদেশ',
+                    contact: '০১৯১৩-৪৫৬৭৮৯'
+                },
+                {
+                    id: 2,
+                    name: 'মোছাঃ রাহেলা বেগম',
+                    designation: 'সদস্য',
+                    occupation: 'ব্যবসায়ী',
+                    address: 'রাজশাহী, বাংলাদেশ',
+                    contact: '০১৫১৪-৮৯০১২৩'
+                }
+            ]);
+        } finally {
+            setMemberListLoading(false);
+        }
+    };
+
+    // Fetch member list when component mounts or when member list tab is active
+    useEffect(() => {
+        if (activeTab === 'সদস্য তালিকা') {
+            fetchMemberList();
+        }
+    }, [activeTab]);
 
 useEffect(() => {
   const fetchData = async () => {
@@ -110,27 +157,6 @@ const image = (objectives?.[0]?.mishonVishon?.mishonVishon?.image);
                         professional: 'সাংবাদিক',
                         address: 'চট্টগ্রাম, বাংলাদেশ',
                         contact: '০১৮১২-৭৮৯০১২'
-                    }
-                ]);
-
-                // const membersResponse = await fetch('/api/members');
-                // const membersData = await membersResponse.json();
-                setMembers([
-                    {
-                        id: 1,
-                        name: 'মোঃ সালাম খান',
-                        designation: 'কর্মকর্তা',
-                        professional: 'শিক্ষক',
-                        address: 'সিলেট, বাংলাদেশ',
-                        contact: '০১৯১৩-৪৫৬৭৮৯'
-                    },
-                    {
-                        id: 2,
-                        name: 'মোছাঃ রাহেলা বেগম',
-                        designation: 'সদস্য',
-                        professional: 'ব্যবসায়ী',
-                        address: 'রাজশাহী, বাংলাদেশ',
-                        contact: '০১৫১৪-৮৯০১২৩'
                     }
                 ]);
 
@@ -333,31 +359,60 @@ const image = (objectives?.[0]?.mishonVishon?.mishonVishon?.image);
 
                     {activeTab === 'সদস্য তালিকা' && (
                         <div id="member-list">
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6">সদস্য তালিকা</h2>
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full bg-white border border-gray-200">
-                                    <thead>
-                                        <tr className="bg-blue-50">
-                                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">নাম</th>
-                                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">পদবী</th>
-                                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">পেশা</th>
-                                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">ঠিকানা</th>
-                                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">যোগাযোগ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {members.map((member) => (
-                                            <tr key={member.id} className="hover:bg-gray-50">
-                                                <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.name}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.designation}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.professional}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.address}</td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.contact}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-bold text-gray-800">সদস্য তালিকা</h2>
+                                <button
+                                    onClick={fetchMemberList}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                                    disabled={memberListLoading}
+                                >
+                                    {memberListLoading ? 'লোড হচ্ছে...' : 'রিফ্রেশ'}
+                                </button>
                             </div>
+                            
+                            {memberListLoading ? (
+                                <div className="flex justify-center items-center py-8">
+                                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+                                </div>
+                            ) : (
+                                <div className="overflow-x-auto rounded-lg shadow">
+                                    <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                                        <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                                            <tr>
+                                                <th className="px-4 py-3 text-left text-sm font-medium">নাম</th>
+                                                <th className="px-4 py-3 text-left text-sm font-medium">পদবী</th>
+                                                <th className="px-4 py-3 text-left text-sm font-medium">পেশা</th>
+                                                <th className="px-4 py-3 text-left text-sm font-medium">ঠিকানা</th>
+                                                <th className="px-4 py-3 text-left text-sm font-medium">যোগাযোগ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {members.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="5" className="text-center py-6 text-gray-500">
+                                                        কোনো সদস্য নেই
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                members.map((member, index) => (
+                                                    <tr
+                                                        key={member.id}
+                                                        className={`transition duration-200 ${
+                                                            index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                                                        } hover:bg-blue-50`}
+                                                    >
+                                                        <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.name}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.designation}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.occupation}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.address}</td>
+                                                        <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.contact}</td>
+                                                    </tr>
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

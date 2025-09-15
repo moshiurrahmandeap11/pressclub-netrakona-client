@@ -58,6 +58,42 @@ const Sidebar = ({ onViewChange, currentView }) => {
                     >
                         সাফল্য ও অর্জন   
                     </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'member-list' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('member-list')}
+                    >
+                        সদস্য তালিকা   
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'adminstration' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('adminstration')}
+                    >
+                        প্রশাসন   
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'media' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('media')}
+                    >
+                        মিডিয়া   
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'committee' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('committee')}
+                    >
+                        কমিটি   
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'gallery' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('gallery')}
+                    >
+                        গ্যালারি   
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'contact' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('contact')}
+                    >
+                        যোগাযোগ   
+                    </li>
                 </ul>
             </nav>
         </aside>

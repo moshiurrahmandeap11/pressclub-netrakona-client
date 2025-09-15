@@ -2,82 +2,28 @@ import React, { useState, useEffect } from "react";
 
 const Administration = () => {
   const [activeTab, setActiveTab] = useState("সভাপতি সারণী");
-  const [presidentData, setPresidentData] = useState([]);
-  const [secretaryData, setSecretaryData] = useState([]);
+  const [administrationData, setAdministrationData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock API calls - replace with your actual API endpoints
+  // Fetch data from API
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Replace these with your actual API calls
-        // const presidentResponse = await fetch('/api/president-list');
-        // const presidentData = await presidentResponse.json();
-        setPresidentData([
-          {
-            id: 1,
-            name: "মোঃ আব্দুর রহমান খান",
-            period: "২০২০-২০২২",
-            image: "/api/placeholder/100/100",
-            phone: "০১৭১১-১২৩৪৫৬",
-            email: "president1@example.com",
-            address: "ঢাকা, বাংলাদেশ",
-          },
-          {
-            id: 2,
-            name: "ডাঃ মোহাম্মদ আলী",
-            period: "২০১৮-২০২০",
-            image: "/api/placeholder/100/100",
-            phone: "০১৮১২-৭৮৯০১২",
-            email: "president2@example.com",
-            address: "চট্টগ্রাম, বাংলাদেশ",
-          },
-          {
-            id: 3,
-            name: "প্রফেসর মোঃ করিম উদ্দিন",
-            period: "২০১৬-২০১৮",
-            image: "/api/placeholder/100/100",
-            phone: "০১৯১৩-৪৫৬৭৮৯",
-            email: "president3@example.com",
-            address: "সিলেট, বাংলাদেশ",
-          },
-        ]);
-
-        // const secretaryResponse = await fetch('/api/secretary-list');
-        // const secretaryData = await secretaryResponse.json();
-        setSecretaryData([
-          {
-            id: 1,
-            name: "মোঃ রফিকুল ইসলাম",
-            period: "২০২০-২০২২",
-            image: "/api/placeholder/100/100",
-            phone: "০১৫১৪-৮৯০১২৩",
-            email: "secretary1@example.com",
-            address: "রাজশাহী, বাংলাদেশ",
-          },
-          {
-            id: 2,
-            name: "জনাব আহমেদ হোসেন",
-            period: "২০১৮-২০২০",
-            image: "/api/placeholder/100/100",
-            phone: "০১৬১৫-৩৪৫৬৭৮",
-            email: "secretary2@example.com",
-            address: "খুলনা, বাংলাদেশ",
-          },
-          {
-            id: 3,
-            name: "মোছাঃ সালমা খাতুন",
-            period: "২০১৬-২০১৮",
-            image: "/api/placeholder/100/100",
-            phone: "০১৭১৬-৯০১২৩৪",
-            email: "secretary3@example.com",
-            address: "বরিশাল, বাংলাদেশ",
-          },
-        ]);
-
-        setLoading(false);
+        setLoading(true);
+        const response = await fetch('https://pressclub-netrakona-server.vercel.app/adminstration');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setAdministrationData(data);
+        setError(null);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching administration data:", error);
+        setError("ডাটা লোড করতে সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।");
+      } finally {
         setLoading(false);
       }
     };
@@ -85,194 +31,266 @@ const Administration = () => {
     fetchData();
   }, []);
 
+  // Filter data based on type
+  const presidentData = administrationData.filter(item => item.type === 'president');
+  const secretaryData = administrationData.filter(item => item.type === 'secretary');
+
   const tabs = ["সভাপতি সারণী", "সাধারণ সম্পাদক সারণী"];
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">ডাটা লোড হচ্ছে...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="text-center p-6 bg-white rounded-lg shadow-md">
+          <div className="text-red-500 mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.382 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+          <p className="text-gray-600 text-lg mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            আবার চেষ্টা করুন
+          </button>
+        </div>
       </div>
     );
   }
 
   const renderDataCards = (data, title) => (
     <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
         {title}
       </h2>
 
-      {/* Desktop Table View */}
-      <div className="hidden lg:block">
-        <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-          <table className="min-w-full">
-            <thead>
-              <tr className="bg-blue-600 text-white">
-                <th className="px-6 py-4 text-left text-sm font-medium">ছবি</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">নাম</th>
-                <th className="px-6 py-4 text-left text-sm font-medium">
-                  মেয়াদকাল
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-medium">
-                  যোগাযোগ
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-medium">
-                  ইমেইল
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-medium">
-                  ঠিকানা
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {data.map((person) => (
-                <tr
-                  key={person.id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <img
-                      src={person.image}
-                      alt={person.name}
-                      className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
-                      onError={(e) => {
-                        e.target.src = `data:image/svg+xml;base64,${btoa(`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {data.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-gray-500 text-lg">কোন তথ্য পাওয়া যায়নি</p>
+        </div>
+      ) : (
+        <>
+          {/* Desktop Table View */}
+          <div className="hidden lg:block">
+            <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+              <table className="min-w-full">
+                <thead>
+                  <tr className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                    <th className="px-4 py-4 text-left text-sm font-semibold">ছবি</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold">নাম</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold">মেয়াদকাল</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold">যোগাযোগ</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold">ইমেইল</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold">ঠিকানা</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {data.map((person) => (
+                    <tr
+                      key={person._id}
+                      className="hover:bg-gray-50 transition-all duration-200"
+                    >
+                      <td className="px-4 py-4">
+                        <div className="flex-shrink-0">
+                          <img
+                            src={person.image || `data:image/svg+xml;base64,${btoa(`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="64" height="64" fill="#E5E7EB"/>
+<circle cx="32" cy="24" r="10" fill="#9CA3AF"/>
+<path d="M10 54c0-12.15 9.85-22 22-22s22 9.85 22 22" fill="#9CA3AF"/>
+</svg>`)}`}
+                            alt={person.name}
+                            className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 shadow-sm"
+                            onError={(e) => {
+                              e.target.src = `data:image/svg+xml;base64,${btoa(`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="64" height="64" fill="#E5E7EB"/>
 <circle cx="32" cy="24" r="10" fill="#9CA3AF"/>
 <path d="M10 54c0-12.15 9.85-22 22-22s22 9.85 22 22" fill="#9CA3AF"/>
 </svg>`)}`;
+                            }}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="font-semibold text-gray-900 text-base">
+                          {person.name}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                          {person.tenure}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900 font-medium">
+                        {person.contact}
+                      </td>
+                      <td className="px-4 py-4">
+                        <a 
+                          href={`mailto:${person.email}`}
+                          className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                        >
+                          {person.email}
+                        </a>
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900">
+                        {person.address}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-6">
+            {data.map((person) => (
+              <div
+                key={person._id}
+                className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300"
+              >
+                <div className="flex flex-col items-center space-y-4">
+                  {/* Profile Image */}
+                  <div className="flex-shrink-0">
+                    <img
+                      src={person.image || `data:image/svg+xml;base64,${btoa(`<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="96" height="96" fill="#E5E7EB"/>
+<circle cx="48" cy="36" r="15" fill="#9CA3AF"/>
+<path d="M15 81c0-18.225 14.775-33 33-33s33 14.775 33 33" fill="#9CA3AF"/>
+</svg>`)}`}
+                      alt={person.name}
+                      className="w-24 h-24 rounded-full object-cover border-4 border-blue-100 shadow-md"
+                      onError={(e) => {
+                        e.target.src = `data:image/svg+xml;base64,${btoa(`<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="96" height="96" fill="#E5E7EB"/>
+<circle cx="48" cy="36" r="15" fill="#9CA3AF"/>
+<path d="M15 81c0-18.225 14.775-33 33-33s33 14.775 33 33" fill="#9CA3AF"/>
+</svg>`)}`;
                       }}
                     />
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-gray-900">
-                      {person.name}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                      {person.period}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {person.phone}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-blue-600">
-                    {person.email}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {person.address}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                  </div>
 
-      {/* Mobile Card View */}
-      <div className="lg:hidden space-y-4">
-        {data.map((person) => (
-          <div
-            key={person.id}
-            className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <div className="flex-shrink-0 mx-auto sm:mx-0">
-                <img
-                  src={person.image}
-                  alt={person.name}
-                  className="w-20 h-20 rounded-full object-cover border-4 border-blue-100"
-                  onError={(e) => {
-                    e.target.src = `data:image/svg+xml;base64,${btoa(`<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="80" height="80" fill="#E5E7EB"/>
-<circle cx="40" cy="30" r="12" fill="#9CA3AF"/>
-<path d="M12 66c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#9CA3AF"/>
-</svg>`)}`;
-                  }}
-                />
-              </div>
-              <div className="flex-1 text-center sm:text-left">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  {person.name}
-                </h3>
-                <div className="space-y-2">
-                  <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0">
-                    <span className="text-sm font-medium text-gray-600 w-full sm:w-20">
-                      মেয়াদকাল:
-                    </span>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mx-auto sm:mx-0">
-                      {person.period}
+                  {/* Name */}
+                  <div className="text-center">
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                      {person.name}
+                    </h3>
+                    
+                    {/* Tenure Badge */}
+                    <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300">
+                      {person.tenure}
                     </span>
                   </div>
-                  <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0">
-                    <span className="text-sm font-medium text-gray-600 w-full sm:w-20">
-                      যোগাযোগ:
-                    </span>
-                    <span className="text-sm text-gray-900">
-                      {person.phone}
-                    </span>
-                  </div>
-                  <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0">
-                    <span className="text-sm font-medium text-gray-600 w-full sm:w-20">
-                      ইমেইল:
-                    </span>
-                    <span className="text-sm text-blue-600 break-all">
-                      {person.email}
-                    </span>
-                  </div>
-                  <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0">
-                    <span className="text-sm font-medium text-gray-600 w-full sm:w-20">
-                      ঠিকানা:
-                    </span>
-                    <span className="text-sm text-gray-900">
-                      {person.address}
-                    </span>
+
+                  {/* Contact Details */}
+                  <div className="w-full space-y-3 mt-4">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex-shrink-0">
+                          <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">যোগাযোগ</p>
+                          <p className="text-sm text-gray-900 font-semibold">{person.contact}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex-shrink-0">
+                          <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-gray-600">ইমেইল</p>
+                          <a 
+                            href={`mailto:${person.email}`}
+                            className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors font-semibold break-all"
+                          >
+                            {person.email}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-shrink-0 mt-0.5">
+                          <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-600">ঠিকানা</p>
+                          <p className="text-sm text-gray-900 font-semibold">{person.address}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
             প্রশাসন
           </h1>
-          <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-700 mx-auto rounded-full"></div>
+          <p className="text-gray-600 mt-4 text-lg">আমাদের সংস্থার নেতৃত্ব ও পরিচালনা</p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow-md mb-6">
+        <div className="bg-white rounded-xl shadow-lg mb-8 overflow-hidden">
           <div className="flex flex-col sm:flex-row">
-            {tabs.map((tab) => (
+            {tabs.map((tab, index) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 sm:px-6 py-3 sm:py-4 font-medium text-sm sm:text-base flex-1 transition-all duration-300 ${
+                className={`px-6 py-4 font-semibold text-base flex-1 transition-all duration-300 relative ${
                   activeTab === tab
-                    ? "text-white bg-blue-600 shadow-lg"
+                    ? "text-white bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg"
                     : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
                 } ${
-                  tab === "সভাপতি সারণী"
-                    ? "rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none"
-                    : "rounded-b-lg sm:rounded-r-lg sm:rounded-bl-none"
+                  index === 0
+                    ? "sm:rounded-tl-xl sm:rounded-bl-xl"
+                    : "sm:rounded-tr-xl sm:rounded-br-xl"
                 }`}
               >
                 {tab}
+                {activeTab === tab && (
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-white opacity-30 sm:hidden"></div>
+                )}
               </button>
             ))}
           </div>
         </div>
 
         {/* Tab Content */}
-        <div className="min-h-[400px]">
+        <div className="min-h-[500px]">
           {activeTab === "সভাপতি সারণী" &&
             renderDataCards(presidentData, "সভাপতি সারণী")}
           {activeTab === "সাধারণ সম্পাদক সারণী" &&

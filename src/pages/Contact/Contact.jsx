@@ -1,35 +1,124 @@
+
 import React, { useState, useEffect } from 'react';
 
 const Contact = () => {
-    const [contactInfo, setContactInfo] = useState(null);
+    const [quickContactData, setQuickContactData] = useState({ email: [], location: [], phone: [] });
+    const [officeHoursData, setOfficeHoursData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        type: '',
+        title: '',
+        name: '',
+        email: '',
+        phone: '',
+        details: ''
+    });
 
-    // Mock API call - replace with your actual API endpoint
+    // Fetch data from API
     useEffect(() => {
-        const fetchContactInfo = async () => {
+        const fetchQuickContactData = async () => {
             try {
-                // Replace this with your actual API call
-                // const response = await fetch('/api/contact-info');
-                // const data = await response.json();
-                setContactInfo({
-                    email: 'info@pressclub.com.bd',
-                    address: 'ঢাকা প্রেস ক্লাব, সেগুনবাগিচা, ঢাকা-১০০০, বাংলাদেশ',
-                    mobile: '০১৭১১-১২৩৪৫৬'
+                const response = await fetch('https://pressclub-netrakona-server.vercel.app/quick-contact');
+                if (!response.ok) throw new Error('Failed to fetch quick contact data');
+                const data = await response.json();
+                setQuickContactData({
+                    email: data.filter(item => item.type === 'email'),
+                    location: data.filter(item => item.type === 'location'),
+                    phone: data.filter(item => item.type === 'phone'),
                 });
-                setLoading(false);
             } catch (error) {
-                console.error('Error fetching contact info:', error);
-                setLoading(false);
+                console.error('Error fetching quick contact data:', error);
+                setError(error.message);
             }
         };
 
-        fetchContactInfo();
+        const fetchOfficeHoursData = async () => {
+            try {
+                const response = await fetch('https://pressclub-netrakona-server.vercel.app/office-hours');
+                if (!response.ok) throw new Error('Failed to fetch office hours data');
+                const data = await response.json();
+                setOfficeHoursData(data);
+            } catch (error) {
+                console.error('Error fetching office hours data:', error);
+                setError(error.message);
+            }
+        };
+
+        Promise.all([fetchQuickContactData(), fetchOfficeHoursData()])
+            .then(() => setLoading(false))
+            .catch(() => setLoading(false));
     }, []);
+
+    // Handle form input changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('https://pressclub-netrakona-server.vercel.app/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: formData.type,
+                    title: formData.title.trim(),
+                    name: formData.name.trim(),
+                    email: formData.email.trim(),
+                    phone: formData.phone.trim(),
+                    details: formData.details.trim(),
+                }),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to submit contact form');
+            }
+            setFormData({ type: '', title: '', name: '', email: '', phone: '', details: '' });
+            setIsModalOpen(false);
+            setError(null);
+        } catch (error) {
+            console.error('Error submitting contact form:', error);
+            setError(error.message);
+        }
+    };
+
+    // Open modal with specific type
+    const openModal = (type) => {
+        setFormData({ type, title: '', name: '', email: '', phone: '', details: '' });
+        setIsModalOpen(true);
+        setError(null);
+    };
+
+    // Close modal
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setFormData({ type: '', title: '', name: '', email: '', phone: '', details: '' });
+        setError(null);
+    };
+
+    // Determine holidays
+    const allDays = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
+    const officeDays = officeHoursData.map(item => item.day);
+    const holidays = allDays.filter(day => !officeDays.includes(day)).join(' এবং ');
 
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen bg-gray-100">
                 <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+            </div>
+        );
+    }
+
+    if (error && !isModalOpen) {
+        return (
+            <div className="flex justify-center items-center min-h-screen bg-gray-100">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    {error}
+                </div>
             </div>
         );
     }
@@ -49,121 +138,193 @@ const Contact = () => {
                     </p>
                 </div>
 
-                {/* Contact Information Cards */}
-                <div className="space-y-6 mb-12">
-                    {/* Email Card */}
-                    <div className="bg-white rounded-2xl shadow-xl p-8 transform hover:scale-105 transition-all duration-300 border-l-6 border-blue-500">
-                        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                            <div className="flex-shrink-0">
-                                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                                    <span className="text-3xl text-white">📧</span>
-                                </div>
-                            </div>
-                            <div className="flex-1 text-center sm:text-left">
-                                <h3 className="text-2xl font-bold text-gray-800 mb-2">ইমেইল</h3>
-                                <p className="text-gray-600 mb-3">আমাদের সাথে ইমেইলের মাধ্যমে যোগাযোগ করুন</p>
-                                <a 
-                                    href={`mailto:${contactInfo.email}`}
-                                    className="inline-flex items-center text-lg font-semibold text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                                >
-                                    {contactInfo.email}
-                                    <span className="ml-2">→</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Address Card */}
-                    <div className="bg-white rounded-2xl shadow-xl p-8 transform hover:scale-105 transition-all duration-300 border-l-6 border-green-500">
-                        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                            <div className="flex-shrink-0">
-                                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
-                                    <span className="text-3xl text-white">📍</span>
-                                </div>
-                            </div>
-                            <div className="flex-1 text-center sm:text-left">
-                                <h3 className="text-2xl font-bold text-gray-800 mb-2">ঠিকানা</h3>
-                                <p className="text-gray-600 mb-3">আমাদের অফিসে সরাসরি যোগাযোগ করুন</p>
-                                <p className="text-lg text-gray-800 font-medium leading-relaxed">
-                                    {contactInfo.address}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Mobile Card */}
-                    <div className="bg-white rounded-2xl shadow-xl p-8 transform hover:scale-105 transition-all duration-300 border-l-6 border-purple-500">
-                        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                            <div className="flex-shrink-0">
-                                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                                    <span className="text-3xl text-white">📱</span>
-                                </div>
-                            </div>
-                            <div className="flex-1 text-center sm:text-left">
-                                <h3 className="text-2xl font-bold text-gray-800 mb-2">মোবাইল</h3>
-                                <p className="text-gray-600 mb-3">জরুরি প্রয়োজনে সরাসরি কল করুন</p>
-                                <a 
-                                    href={`tel:${contactInfo.mobile}`}
-                                    className="inline-flex items-center text-lg font-semibold text-purple-600 hover:text-purple-800 transition-colors duration-200"
-                                >
-                                    {contactInfo.mobile}
-                                    <span className="ml-2">📞</span>
-                                </a>
-                            </div>
-                        </div>
+                {/* Contact Buttons */}
+                <div className="bg-white rounded-2xl shadow-xl p-8 mb-12">
+                    <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">আপনার মতামত জানান</h2>
+                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                        <button
+                            onClick={() => openModal('feedback')}
+                            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors duration-200 font-semibold"
+                        >
+                            মতামত দিন
+                        </button>
+                        <button
+                            onClick={() => openModal('suggestion')}
+                            className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors duration-200 font-semibold"
+                        >
+                            পরামর্শ দিন
+                        </button>
+                        <button
+                            onClick={() => openModal('inquiry')}
+                            className="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition-colors duration-200 font-semibold"
+                        >
+                            জিজ্ঞাসা করুন
+                        </button>
                     </div>
                 </div>
+
+                {/* Modal */}
+                {isModalOpen && (
+                    <div className="fixed inset-0 bg-black/30 bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-xl">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                {formData.type === 'feedback' ? 'মতামত' : formData.type === 'suggestion' ? 'পরামর্শ' : 'জিজ্ঞাসা'}
+                            </h2>
+                            {error && (
+                                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+                                    {error}
+                                </div>
+                            )}
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">টাইটেল</label>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        value={formData.title}
+                                        onChange={handleInputChange}
+                                        placeholder="আপনার মতামতের টাইটেল লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">নাম</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        placeholder="আপনার নাম লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">ইমেইল</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        placeholder="আপনার ইমেইল লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">মোবাইল নাম্বার</label>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleInputChange}
+                                        placeholder="আপনার মোবাইল নাম্বার লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">ডিটেইলস</label>
+                                    <textarea
+                                        name="details"
+                                        value={formData.details}
+                                        onChange={handleInputChange}
+                                        placeholder="আপনার মতামত, পরামর্শ, বা জিজ্ঞাসা বিস্তারিত লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        rows="5"
+                                        required
+                                    />
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={closeModal}
+                                        className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                                    >
+                                        বাতিল
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        সাবমিট
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
 
                 {/* Quick Contact Summary */}
-                <div className="bg-white rounded-2xl shadow-xl p-8 border-t-6 border-blue-500">
-                    <div className="text-center">
-                        <h2 className="text-3xl font-bold text-gray-800 mb-6">দ্রুত যোগাযোগ</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="group cursor-pointer">
-                                <a href={`mailto:${contactInfo.email}`} className="block">
-                                    <div className="bg-blue-50 rounded-xl p-6 group-hover:bg-blue-100 transition-colors duration-300">
-                                        <span className="text-3xl block mb-3">📧</span>
-                                        <h3 className="font-semibold text-gray-800 mb-2">ইমেইল করুন</h3>
-                                        <p className="text-sm text-gray-600 break-all">{contactInfo.email}</p>
+                {(quickContactData.email.length > 0 || quickContactData.location.length > 0 || quickContactData.phone.length > 0) && (
+                    <div className="bg-white rounded-2xl shadow-xl p-8 border-t-6 border-blue-500 mb-12">
+                        <div className="text-center">
+                            <h2 className="text-3xl font-bold text-gray-800 mb-6">দ্রুত যোগাযোগ</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {quickContactData.email.length > 0 && (
+                                    <div className="group cursor-pointer">
+                                        <a href={`mailto:${quickContactData.email[0].value}`} className="block">
+                                            <div className="bg-blue-50 rounded-xl p-6 group-hover:bg-blue-100 transition-colors duration-300">
+                                                <span className="text-3xl block mb-3">📧</span>
+                                                <h3 className="font-semibold text-gray-800 mb-2">ইমেইল করুন</h3>
+                                                <p className="text-sm text-gray-600 break-all">{quickContactData.email[0].value}</p>
+                                            </div>
+                                        </a>
                                     </div>
-                                </a>
-                            </div>
-                            <div className="group cursor-pointer">
-                                <div className="bg-green-50 rounded-xl p-6 group-hover:bg-green-100 transition-colors duration-300">
-                                    <span className="text-3xl block mb-3">📍</span>
-                                    <h3 className="font-semibold text-gray-800 mb-2">অফিসে আসুন</h3>
-                                    <p className="text-sm text-gray-600">সেগুনবাগিচা, ঢাকা</p>
-                                </div>
-                            </div>
-                            <div className="group cursor-pointer">
-                                <a href={`tel:${contactInfo.mobile}`} className="block">
-                                    <div className="bg-purple-50 rounded-xl p-6 group-hover:bg-purple-100 transition-colors duration-300">
-                                        <span className="text-3xl block mb-3">📱</span>
-                                        <h3 className="font-semibold text-gray-800 mb-2">ফোন করুন</h3>
-                                        <p className="text-sm text-gray-600">{contactInfo.mobile}</p>
+                                )}
+                                {quickContactData.location.length > 0 && (
+                                    <div className="group cursor-pointer">
+                                        <div className="bg-green-50 rounded-xl p-6 group-hover:bg-green-100 transition-colors duration-300">
+                                            <span className="text-3xl block mb-3">📍</span>
+                                            <h3 className="font-semibold text-gray-800 mb-2">অফিসে আসুন</h3>
+                                            <p className="text-sm text-gray-600">{quickContactData.location[0].value}</p>
+                                        </div>
                                     </div>
-                                </a>
+                                )}
+                                {quickContactData.phone.length > 0 && (
+                                    <div className="group cursor-pointer">
+                                        <a href={`tel:${quickContactData.phone[0].value}`} className="block">
+                                            <div className="bg-purple-50 rounded-xl p-6 group-hover:bg-purple-100 transition-colors duration-300">
+                                                <span className="text-3xl block mb-3">📱</span>
+                                                <h3 className="font-semibold text-gray-800 mb-2">ফোন করুন</h3>
+                                                <p className="text-sm text-gray-600">{quickContactData.phone[0].value}</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
 
-                {/* Office Hours */}
+                {/* Office Hours and Holidays */}
                 <div className="mt-8 bg-white rounded-2xl shadow-xl p-8 text-center">
                     <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center justify-center gap-3">
                         <span className="text-3xl">🕒</span>
-                        অফিস সময়
+                        অফিস সময় এবং ছুটির দিন
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg">
                         <div className="bg-blue-50 rounded-xl p-6">
                             <h3 className="font-semibold text-gray-800 mb-2">কর্মদিবস</h3>
-                            <p className="text-gray-700">রবিবার - বৃহস্পতিবার</p>
-                            <p className="text-blue-600 font-medium">সকাল ৯:০০ - সন্ধ্যা ৬:০০</p>
+                            {officeHoursData.length > 0 ? (
+                                officeHoursData.map(item => (
+                                    <div key={item._id} className="text-gray-700 mb-2">
+                                        <span>{item.day}: </span>
+                                        <span className="text-blue-600 font-medium">{item.hours}</span>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-gray-600">কোনো কর্মদিবসের তথ্য নেই</p>
+                            )}
                         </div>
                         <div className="bg-green-50 rounded-xl p-6">
                             <h3 className="font-semibold text-gray-800 mb-2">সাপ্তাহিক ছুটি</h3>
-                            <p className="text-gray-700">শুক্রবার ও শনিবার</p>
-                            <p className="text-green-600 font-medium">সরকারি ছুটির দিন বন্ধ</p>
+                            {holidays ? (
+                                <p className="text-gray-700">{holidays}</p>
+                            ) : (
+                                <p className="text-gray-600">কোনো ছুটির দিন নেই</p>
+                            )}
+                            <p className="text-green-600 font-medium mt-2">সরকারি ছুটির দিন বন্ধ</p>
                         </div>
                     </div>
                 </div>

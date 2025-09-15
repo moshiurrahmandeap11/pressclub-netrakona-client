@@ -9,8 +9,14 @@ const ContactAdmin = () => {
     const [officeHoursData, setOfficeHoursData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editItemId, setEditItemId] = useState(null);
     const [formData, setFormData] = useState({
-        message: '',
+        title: '',
+        name: '',
+        email: '',
+        phone: '',
+        details: '',
         emailValue: '',
         locationValue: '',
         phoneValue: '',
@@ -38,9 +44,21 @@ const ContactAdmin = () => {
     // Handle tab change
     const handleTabChange = (tab) => {
         setActiveTab(tab);
-        setFormData({ message: '', emailValue: '', locationValue: '', phoneValue: '', day: '', hours: '' });
+        setFormData({
+            title: '',
+            name: '',
+            email: '',
+            phone: '',
+            details: '',
+            emailValue: '',
+            locationValue: '',
+            phoneValue: '',
+            day: '',
+            hours: ''
+        });
         setSearchParams({ tab: reverseTabMapping[tab] });
-        setError(null); // Clear error on tab change
+        setError(null);
+        setIsEditModalOpen(false);
     };
 
     // Fetch data
@@ -100,7 +118,7 @@ const ContactAdmin = () => {
         });
     };
 
-    // Handle form submissions
+    // Handle form submissions for quick-contact and office-hours
     const handleSubmit = async (e, endpoint, type) => {
         e.preventDefault();
         try {
@@ -135,23 +153,69 @@ const ContactAdmin = () => {
                 setOfficeHoursData([...officeHoursData, newItem]);
                 setFormData({ ...formData, day: '', hours: '' });
             }
-            setError(null); // Clear error on success
+            setError(null);
         } catch (error) {
             console.error('Error adding item:', error);
             setError(error.message);
         }
     };
 
-    // Handle edit
+    // Handle edit for contact items
+    const handleContactEdit = async (e) => {
+        e.preventDefault();
+        try {
+            const body = {
+                title: formData.title.trim(),
+                name: formData.name.trim(),
+                email: formData.email.trim(),
+                phone: formData.phone.trim(),
+                details: formData.details.trim(),
+                type: reverseTabMapping[activeTab]
+            };
+
+            const response = await fetch(`https://pressclub-netrakona-server.vercel.app/contact/${editItemId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to update contact item');
+            }
+            const updatedItem = await response.json();
+
+            setContactData(contactData.map(item =>
+                item._id === editItemId ? updatedItem : item
+            ));
+            setFormData({
+                title: '',
+                name: '',
+                email: '',
+                phone: '',
+                details: '',
+                emailValue: '',
+                locationValue: '',
+                phoneValue: '',
+                day: '',
+                hours: ''
+            });
+            setIsEditModalOpen(false);
+            setEditItemId(null);
+            setError(null);
+        } catch (error) {
+            console.error('Error updating contact item:', error);
+            setError(error.message);
+        }
+    };
+
+    // Handle edit for quick-contact and office-hours
     const handleEdit = async (id, updatedData, endpoint) => {
         try {
             const valueKey = endpoint === 'quick-contact' ? `${updatedData.type}Value` : 'hours';
             const updatedValue = formData[valueKey] || updatedData.value || updatedData.hours;
             const body = endpoint === 'quick-contact'
                 ? { type: updatedData.type, value: updatedValue }
-                : endpoint === 'contact'
-                ? { message: formData.message }
-                : { day: formData.day, hours: updatedValue };
+                : { day: formData.day || updatedData.day, hours: updatedValue };
 
             const response = await fetch(`https://pressclub-netrakona-server.vercel.app/${endpoint}/${id}`, {
                 method: 'PATCH',
@@ -175,20 +239,20 @@ const ContactAdmin = () => {
                 setOfficeHoursData(officeHoursData.map(item =>
                     item._id === id ? updatedItem : item
                 ));
-            } else {
-                setContactData(contactData.map(item =>
-                    item._id === id ? updatedItem : item
-                ));
             }
             setFormData({
-                message: '',
+                title: '',
+                name: '',
+                email: '',
+                phone: '',
+                details: '',
                 emailValue: '',
                 locationValue: '',
                 phoneValue: '',
                 day: '',
                 hours: ''
             });
-            setError(null); // Clear error on success
+            setError(null);
         } catch (error) {
             console.error('Error updating item:', error);
             setError(error.message);
@@ -216,11 +280,49 @@ const ContactAdmin = () => {
             } else {
                 setContactData(contactData.filter(item => item._id !== id));
             }
-            setError(null); // Clear error on success
+            setError(null);
         } catch (error) {
             console.error('Error deleting item:', error);
             setError(error.message);
         }
+    };
+
+    // Open edit modal for contact items
+    const openEditModal = (item) => {
+        setFormData({
+            title: item.title,
+            name: item.name,
+            email: item.email,
+            phone: item.phone || '',
+            details: item.details,
+            emailValue: '',
+            locationValue: '',
+            phoneValue: '',
+            day: '',
+            hours: ''
+        });
+        setEditItemId(item._id);
+        setIsEditModalOpen(true);
+        setError(null);
+    };
+
+    // Close edit modal
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+        setEditItemId(null);
+        setFormData({
+            title: '',
+            name: '',
+            email: '',
+            phone: '',
+            details: '',
+            emailValue: '',
+            locationValue: '',
+            phoneValue: '',
+            day: '',
+            hours: ''
+        });
+        setError(null);
     };
 
     const tabs = ['মতামত', 'পরামর্শ', 'জিজ্ঞাসা', 'দ্রুত যোগাযোগ', 'অফিস সময়'];
@@ -275,26 +377,117 @@ const ContactAdmin = () => {
                     </div>
                 </div>
 
+                {/* Edit Modal for Contact Items */}
+                {isEditModalOpen && (
+                    <div className="fixed inset-0 bg-black/30 bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-xl">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                {activeTab} এডিট করুন
+                            </h2>
+                            {error && (
+                                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+                                    {error}
+                                </div>
+                            )}
+                            <form onSubmit={handleContactEdit}>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">টাইটেল</label>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        value={formData.title}
+                                        onChange={handleInputChange}
+                                        placeholder="টাইটেল লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">নাম</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        placeholder="নাম লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">ইমেইল</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        placeholder="ইমেইল লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">মোবাইল নাম্বার</label>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleInputChange}
+                                        placeholder="মোবাইল নাম্বার লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-medium mb-2">ডিটেইলস</label>
+                                    <textarea
+                                        name="details"
+                                        value={formData.details}
+                                        onChange={handleInputChange}
+                                        placeholder="ডিটেইলস লিখুন"
+                                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        rows="5"
+                                        required
+                                    />
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={closeEditModal}
+                                        className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                                    >
+                                        বাতিল
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        সংরক্ষণ করুন
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
                 {/* Content */}
                 {['মতামত', 'পরামর্শ', 'জিজ্ঞাসা'].includes(activeTab) && (
                     <div>
-                        {/* List (No Add Form) */}
                         <div className="grid gap-6">
                             {contactData
                                 .filter(item => item.type === reverseTabMapping[activeTab])
                                 .map((item) => (
                                     <div key={item._id} className="bg-white rounded-lg shadow-md p-6">
-                                        <p className="text-gray-800 mb-2">{item.message}</p>
+                                        <p className="text-gray-800 mb-2"><strong>টাইটেল:</strong> {item.title}</p>
+                                        <p className="text-gray-800 mb-2"><strong>নাম:</strong> {item.name}</p>
+                                        <p className="text-gray-800 mb-2"><strong>ইমেইল:</strong> {item.email}</p>
+                                        <p className="text-gray-800 mb-2"><strong>মোবাইল:</strong> {item.phone || 'নেই'}</p>
+                                        <p className="text-gray-800 mb-2"><strong>ডিটেইলস:</strong> {item.details}</p>
                                         <p className="text-sm text-gray-600 mb-4">
-                                            {new Date(item.createdAt).toLocaleDateString('bn-BD')}
+                                            <strong>তারিখ:</strong> {new Date(item.createdAt).toLocaleDateString('bn-BD')}
                                         </p>
                                         <div className="flex gap-2">
-                                            
                                             <button
-                                                onClick={() => {
-                                                    setFormData({ ...formData, message: item.message });
-                                                    handleEdit(item._id, { message: formData.message }, 'contact');
-                                                }}
+                                                onClick={() => openEditModal(item)}
                                                 className="text-blue-600 hover:text-blue-800"
                                             >
                                                 এডিট

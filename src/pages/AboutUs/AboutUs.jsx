@@ -309,8 +309,8 @@ const AboutUs = () => {
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">ছবি</th>
                         <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">নাম</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">পেশা</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">পদবী</th>
+                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b">পেশা</th>
+                        <th className="px-4 py-3 text-center  text-sm font-medium text-gray-700 border-b">পদবী</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -340,8 +340,8 @@ const AboutUs = () => {
                               />
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.name}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.professional}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.designation}</td>
+                            <td className="px-4 py-3 text-center text-sm text-gray-900 border-b">{member.professional}</td>
+                            <td className="px-4 py-3 text-center text-sm text-gray-900 border-b">{member.designation}</td>
                           </tr>
                         ))
                       )}

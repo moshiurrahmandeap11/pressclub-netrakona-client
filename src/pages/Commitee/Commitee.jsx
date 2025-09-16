@@ -61,7 +61,7 @@ const Committee = () => {
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
                         কার্যকরী কমিটি
                     </h1>
-                    <div className="w-32 h-1 bg-blue-600 mx-auto"></div>
+                    <div className="w-full h-1 bg-blue-600 mx-auto"></div>
                     <p className="text-gray-600 mt-4 text-lg">বর্তমান কার্যনির্বাহী কমিটির সদস্যবৃন্দ</p>
                 </div>
 

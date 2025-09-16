@@ -10,8 +10,6 @@ const PermanentMember = () => {
     name: '',
     designation: '',
     occupation: '',
-    address: '',
-    contact: '',
     image: ''
   });
   const [error, setError] = useState(null);
@@ -29,7 +27,7 @@ const PermanentMember = () => {
     setError(null);
     try {
       const response = await axios.get('https://pressclub-netrakona-server.vercel.app/permanent-member', {
-        timeout: 5000 // Set a 5-second timeout to avoid hanging
+        timeout: 5000
       });
       const formattedData = response.data.map(item => ({
         id: item._id,
@@ -54,20 +52,17 @@ const PermanentMember = () => {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file size (e.g., max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setError('ইমেজের আকার ৫ এমবি-এর বেশি হতে পারবে না।');
         return;
       }
 
-      // Preview the image
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
 
-      // Upload to ImgBB
       try {
         const formDataImg = new FormData();
         formDataImg.append('image', file);
@@ -94,8 +89,6 @@ const PermanentMember = () => {
       name: '',
       designation: '',
       occupation: '',
-      address: '',
-      contact: '',
       image: ''
     });
     setImagePreview(null);
@@ -110,8 +103,6 @@ const PermanentMember = () => {
       name: member.name || '',
       designation: member.designation || '',
       occupation: member.occupation || '',
-      address: member.address || '',
-      contact: member.contact || '',
       image: member.image || ''
     });
     setImagePreview(member.image || null);
@@ -196,7 +187,6 @@ const PermanentMember = () => {
     }
   };
 
-  // Memoize the table rows to prevent unnecessary re-renders
   const memoizedMembers = useMemo(() => members, [members]);
 
   return (
@@ -212,7 +202,6 @@ const PermanentMember = () => {
         </button>
       </div>
 
-      {/* Success/Error Messages */}
       {success && (
         <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
           {success}
@@ -222,7 +211,6 @@ const PermanentMember = () => {
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{error}</div>
       )}
 
-      {/* Table */}
       {loading ? (
         <div className="flex justify-center items-center py-8">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
@@ -232,19 +220,18 @@ const PermanentMember = () => {
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
             <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
               <tr>
+                <th className="px-4 py-3 text-left text-sm font-medium">ক্রমিক নং</th>
                 <th className="px-4 py-3 text-left text-sm font-medium">ছবি</th>
                 <th className="px-4 py-3 text-left text-sm font-medium">নাম</th>
-                <th className="px-4 py-3 text-left text-sm font-medium">পদবী</th>
                 <th className="px-4 py-3 text-left text-sm font-medium">পেশা</th>
-                <th className="px-4 py-3 text-left text-sm font-medium">ঠিকানা</th>
-                <th className="px-4 py-3 text-left text-sm font-medium">যোগাযোগ</th>
+                <th className="px-4 py-3 text-left text-sm font-medium">পদবী</th>
                 <th className="px-4 py-3 text-center text-sm font-medium">ক্রিয়াকলাপ</th>
               </tr>
             </thead>
             <tbody>
               {memoizedMembers.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-6 text-gray-500">
+                  <td colSpan="6" className="text-center py-6 text-gray-500">
                     কোনো স্থায়ী সদস্য নেই
                   </td>
                 </tr>
@@ -256,6 +243,7 @@ const PermanentMember = () => {
                       index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                     } hover:bg-blue-50`}
                   >
+                    <td className="px-4 py-3 border-b text-sm text-gray-900">{index + 1}</td>
                     <td className="px-4 py-3 border-b">
                       <img
                         src={member.image || `data:image/svg+xml;base64,${btoa(
@@ -270,10 +258,8 @@ const PermanentMember = () => {
                       />
                     </td>
                     <td className="px-4 py-3 border-b text-sm text-gray-900">{member.name}</td>
-                    <td className="px-4 py-3 border-b text-sm text-gray-900">{member.designation}</td>
                     <td className="px-4 py-3 border-b text-sm text-gray-900">{member.occupation}</td>
-                    <td className="px-4 py-3 border-b text-sm text-gray-900">{member.address}</td>
-                    <td className="px-4 py-3 border-b text-sm text-gray-900">{member.contact}</td>
+                    <td className="px-4 py-3 border-b text-sm text-gray-900">{member.designation}</td>
                     <td className="px-4 py-3 border-b flex justify-center space-x-3">
                       <button
                         onClick={() => handleEditMember(member)}
@@ -298,7 +284,6 @@ const PermanentMember = () => {
         </div>
       )}
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/30 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
@@ -334,17 +319,6 @@ const PermanentMember = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">পদবী</label>
-                <input
-                  type="text"
-                  name="designation"
-                  value={formData.designation}
-                  onChange={handleInputChange}
-                  className="w-full border px-3 py-2 rounded"
-                  required
-                />
-              </div>
-              <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">পেশা</label>
                 <input
                   type="text"
@@ -356,22 +330,11 @@ const PermanentMember = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">ঠিকানা</label>
+                <label className="block text-sm font-medium mb-1">পদবী</label>
                 <input
                   type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className="w-full border px-3 py-2 rounded"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">যোগাযোগ</label>
-                <input
-                  type="text"
-                  name="contact"
-                  value={formData.contact}
+                  name="designation"
+                  value={formData.designation}
                   onChange={handleInputChange}
                   className="w-full border px-3 py-2 rounded"
                   required

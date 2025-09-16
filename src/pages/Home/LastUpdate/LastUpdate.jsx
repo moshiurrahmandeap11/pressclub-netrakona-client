@@ -22,19 +22,15 @@ const LastUpdate = () => {
     fetchNews();
   }, []);
 
-  // Auto-scroll logic
+  // Auto-scroll logic (always-on)
   useEffect(() => {
     if (news.length === 0) return;
 
-    const startScrolling = () => {
-      intervalRef.current = setInterval(() => {
-        setCurrentIndex((prevIndex) =>
-          prevIndex === news.length - 1 ? 0 : prevIndex + 1
-        );
-      }, 3000);
-    };
-
-    startScrolling();
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === news.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
 
     return () => clearInterval(intervalRef.current);
   }, [news]);
@@ -43,72 +39,60 @@ const LastUpdate = () => {
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
-        top: currentIndex * 40, // প্রতিটা item এর height
+        top: currentIndex * 40,
         behavior: 'smooth',
       });
     }
   }, [currentIndex]);
 
-  // Pause scrolling on hover
-  const handleMouseEnter = () => {
-    clearInterval(intervalRef.current);
-  };
-
-  const handleMouseLeave = () => {
-    intervalRef.current = setInterval(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === news.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 3000);
-  };
-
-  // Navigate to /all-updates
   const handleButtonClick = () => {
     navigate('/all-updates');
   };
 
-  // Navigate to details
   const handleNavigateDetails = (id) => {
     navigate(`/update-details/${id}`);
   };
 
   return (
-    <div className="w-full max-w-2xl p-4">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        নোটিশ
-      </h1>
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">নোটিশ</h1>
       <div
         ref={scrollRef}
-        className="h-40 overflow-hidden bg-white shadow-md rounded-lg border border-gray-200"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className="h-40 overflow-hidden bg-white shadow-md rounded-lg border border-gray-200 w-full"
       >
-        <div className="flex flex-col">
+        <ul className="flex flex-col">
           {news.length > 0 ? (
             news.map((item) => (
-              <div
+              <li
                 key={item._id}
                 onClick={() => handleNavigateDetails(item._id)}
-                className="p-2 text-gray-700 hover:bg-gray-100 transition-colors text-left cursor-pointer"
-                style={{ height: '40px', lineHeight: '40px' }}
+                className="p-2 text-gray-700 hover:bg-gray-100 text-sm md:text-base transition-colors text-left cursor-pointer truncate list-disc ml-5"
+                style={{
+                  height: '40px',
+                  lineHeight: '40px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+                title={item.title} // mouse hover e full title show
               >
                 {item.title}
-              </div>
+              </li>
             ))
           ) : (
-            <div
-              className="p-2 text-gray-500 text-left"
+            <li
+              className="p-2 text-gray-500 text-left list-disc ml-5"
               style={{ height: '40px', lineHeight: '40px' }}
             >
               কোনো খবর পাওয়া যায়নি
-            </div>
+            </li>
           )}
-        </div>
+        </ul>
       </div>
       <div className="mt-4 flex justify-end">
         <button
           onClick={handleButtonClick}
-          className="px-4 py-2 bg-green-600 cursor-pointer text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-blue-700 transition-colors"
         >
           সকল নোটিশ
         </button>

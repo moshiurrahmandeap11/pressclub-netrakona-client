@@ -288,7 +288,7 @@ const AboutUs = () => {
           )}
           {activeTab === 'প্রতিষ্ঠাকালীন সদস্যবৃন্দ' && (
             <div id="members">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">প্রতিষ্ঠাকালীন সদস্যবৃন্দ</h2>
+              <h2 className="text-2xl sm:text-3xl text-center font-bold text-gray-800 mb-6">প্রতিষ্ঠাকালীন সদস্যবৃন্দ</h2>
               {committeeLoading ? (
                 <div className="flex justify-center items-center py-8">
                   <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
@@ -302,10 +302,8 @@ const AboutUs = () => {
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">ছবি</th>
                         <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">নাম</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">পদবী</th>
                         <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">পেশা</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">ঠিকানা</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">যোগাযোগ</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">পদবী</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -335,10 +333,8 @@ const AboutUs = () => {
                               />
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.name}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.designation}</td>
                             <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.professional}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.address}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.contact}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.designation}</td>
                           </tr>
                         ))
                       )}
@@ -351,7 +347,7 @@ const AboutUs = () => {
           {activeTab === 'সাধারণ পরিষদ' && (
             <div id="member-list">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">সাধারণ পরিষদ</h2>
+                <h2 className="text-2xl flex-1 sm:text-3xl font-bold text-gray-800">সাধারণ পরিষদ</h2>
                 <button
                   onClick={fetchMemberList}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition disabled:opacity-50"
@@ -367,13 +363,13 @@ const AboutUs = () => {
               ) : (
                 <div className="overflow-x-auto rounded-lg shadow">
                   <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                    <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                    <thead className="bg-gradient-to-r from-blue-500 to-indigo-600  text-white">
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium">নাম</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium">পদবী</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium">পেশা</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium">ঠিকানা</th>
-                        <th className="px-4 py-3 text-left text-sm font-medium">যোগাযোগ</th>
+                        <th className="px-4 py-3 text-center text-sm font-medium">নাম</th>
+                        <th className="px-4 py-3 text-center text-sm font-medium">পদবী</th>
+                        <th className="px-4 py-3 text-center text-sm font-medium">পেশা</th>
+                        <th className="px-4 py-3 text-center text-sm font-medium">ঠিকানা</th>
+                        <th className="px-4 py-3 text-center text-sm font-medium">মোবাইল</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -391,11 +387,11 @@ const AboutUs = () => {
                               index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                             } hover:bg-blue-50`}
                           >
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.name}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.designation}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.occupation}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.address}</td>
-                            <td className="px-4 py-3 text-sm text-gray-900 border-b">{member.contact}</td>
+                            <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.name}</td>
+                            <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.designation}</td>
+                            <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.occupation}</td>
+                            <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.address}</td>
+                            <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.contact}</td>
                           </tr>
                         ))
                       )}

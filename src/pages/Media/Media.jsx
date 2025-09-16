@@ -150,7 +150,7 @@ const Media = () => {
                                 <div className="grid grid-cols-1 gap-3">
                                     <div className="flex flex-col sm:flex-row sm:items-center">
                                         <span className="text-sm font-semibold text-gray-600 mb-1 sm:mb-0 sm:w-32">
-                                            প্রতিনিধি:
+                                            জেলা প্রতিনিধি:
                                         </span>
                                         <span className="text-gray-900 font-medium">{media.representative}</span>
                                     </div>

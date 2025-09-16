@@ -305,27 +305,6 @@ const CommitteeAdmin = () => {
                                     className="w-full p-2 border rounded"
                                     value={formData.contact}
                                     onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block mb-1 font-medium">ইমেইল</label>
-                                <input
-                                    type="email"
-                                    className="w-full p-2 border rounded"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block mb-1 font-medium">ঠিকানা</label>
-                                <input
-                                    type="text"
-                                    className="w-full p-2 border rounded"
-                                    value={formData.address}
-                                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                    required
                                 />
                             </div>
                             <div className="flex justify-end gap-2">

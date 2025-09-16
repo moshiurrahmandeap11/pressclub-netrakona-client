@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NavItems from './NavItems/NavItems';
-import logo from "../../../assets/logo.jpg"
+import logo from "../../../assets/Press club logo.PNG"
 
 const Navbar = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -88,7 +88,7 @@ const Navbar = () => {
                                 {/* Text Content */}
                                 <div className="flex flex-col">
                                     <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight">
-                                        নেত্রকোনা জেলা প্রেস ক্লাব
+                                        নেত্রকোনা জেলা প্রেসক্লাব
                                     </h1>
                                 </div>
                             </div>

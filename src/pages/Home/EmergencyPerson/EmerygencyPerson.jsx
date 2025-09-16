@@ -69,10 +69,10 @@ const EmergencyPerson = () => {
 
       {/* Name & Designation */}
       <div className="text-center">
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">
+        <h3 className="text-xs font-bold text-gray-700 mb-2">
           {person.name || 'নাম নেই'}
         </h3>
-        <p className="text-gray-600">
+        <p className="text-gray-600 text-xs">
           {person.designation || 'পদবি নেই'}
         </p>
       </div>

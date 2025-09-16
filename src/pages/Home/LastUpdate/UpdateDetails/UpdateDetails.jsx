@@ -46,7 +46,7 @@ const UpdateDetails = () => {
 
   return (
     <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">
+      <h1 className="text-xl font-bold text-gray-800 mb-4">
         {update.title}
       </h1>
       <img src={update?.imageUrl} alt="" />

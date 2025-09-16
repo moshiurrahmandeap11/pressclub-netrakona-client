@@ -84,8 +84,68 @@ const Committee = () => {
                     </div>
                 </div>
 
-                {/* Desktop Table View */}
-                <div className="hidden lg:block">
+                {/* Desktop Table View - Made responsive and centered */}
+                <div className="block lg:hidden overflow-x-auto mx-auto max-w-full">
+                    <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full w-full">
+                                <thead>
+                                    <tr className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+                                        <th className="px-4 py-3 text-left text-xs font-semibold">ছবি</th>
+                                        <th className="px-4 py-3 text-left text-xs font-semibold">নাম</th>
+                                        <th className="px-4 py-3 text-left text-xs font-semibold">পদবী</th>
+                                        <th className="px-4 py-3 text-left text-xs font-semibold">পেশা</th>
+                                        <th className="px-4 py-3 text-left text-xs font-semibold">যোগাযোগ</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                    {filteredCommittee.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                                                কোনো তথ্য পাওয়া যায়নি
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        filteredCommittee.map((member, index) => (
+                                            <tr key={member._id} className={`transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50`}>
+                                                <td className="px-4 py-3">
+                                                    <img
+                                                        src={member.image || `data:image/svg+xml;base64,${btoa(`<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="48" height="48" fill="#E5E7EB"/>
+<circle cx="24" cy="18" r="8" fill="#9CA3AF"/>
+<path d="M8 40c0-12.15 7.85-22 18-22s18 9.85 18 22" fill="#9CA3AF"/>
+</svg>`)}`}
+                                                        alt={member.name}
+                                                        className="w-12 h-12 rounded-full object-cover border-2 border-blue-200 shadow-sm"
+                                                    />
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <div className="font-semibold text-gray-900 text-sm">{member.name}</div>
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                        {member.designation}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <div className="text-gray-800 font-medium text-sm">{member.occupation}</div>
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <a href={`tel:${member.contact}`} className="text-blue-600 font-medium hover:text-blue-800 transition-colors text-sm">
+                                                        {member.contact}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Large Screen Table View - Centered and responsive */}
+                <div className="hidden lg:block mx-auto max-w-full">
                     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="min-w-full">
@@ -93,17 +153,15 @@ const Committee = () => {
                                     <tr className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
                                         <th className="px-6 py-4 text-left text-sm font-semibold">ছবি</th>
                                         <th className="px-6 py-4 text-left text-sm font-semibold">নাম</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold">পদবী</th>
+                                        <th className="px-6 py-4 text-center text-sm font-semibold">পদবী</th>
                                         <th className="px-6 py-4 text-left text-sm font-semibold">পেশা</th>
                                         <th className="px-6 py-4 text-left text-sm font-semibold">যোগাযোগ</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold">ইমেইল</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold">ঠিকানা</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {filteredCommittee.length === 0 ? (
                                         <tr>
-                                            <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                                            <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
                                                 কোনো তথ্য পাওয়া যায়নি
                                             </td>
                                         </tr>
@@ -111,27 +169,20 @@ const Committee = () => {
                                         filteredCommittee.map((member, index) => (
                                             <tr key={member._id} className={`transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50`}>
                                                 <td className="px-6 py-4">
-                                                    {member.image ? (
-                                                        <img
-                                                            src={member.image}
-                                                            alt={member.name}
-                                                            className="w-16 h-16 rounded-full object-cover border-2 border-blue-200 shadow-sm"
-                                                            onError={(e) => {
-                                                                e.target.src = `data:image/svg+xml;base64,${btoa(`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <img
+                                                        src={member.image || `data:image/svg+xml;base64,${btoa(`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="64" height="64" fill="#E5E7EB"/>
 <circle cx="32" cy="24" r="10" fill="#9CA3AF"/>
 <path d="M10 54c0-12.15 9.85-22 22-22s22 9.85 22 22" fill="#9CA3AF"/>
-</svg>`)}`;
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        <span className="text-gray-500">No Image</span>
-                                                    )}
+</svg>`)}`}
+                                                        alt={member.name}
+                                                        className="w-16 h-16 rounded-full object-cover border-2 border-blue-200 shadow-sm"
+                                                    />
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="font-semibold text-gray-900 text-lg">{member.name}</div>
                                                 </td>
-                                                <td className="px-6 py-4">
+                                                <td className="px-6 py-4 text-center">
                                                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                                                         {member.designation}
                                                     </span>
@@ -144,14 +195,6 @@ const Committee = () => {
                                                         {member.contact}
                                                     </a>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <a href={`mailto:${member.email}`} className="text-green-600 font-medium hover:text-green-800 transition-colors break-all">
-                                                        {member.email}
-                                                    </a>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="text-gray-700">{member.address}</div>
-                                                </td>
                                             </tr>
                                         ))
                                     )}
@@ -162,7 +205,7 @@ const Committee = () => {
                 </div>
 
                 {/* Mobile Card View */}
-                <div className="lg:hidden space-y-6">
+                <div className="lg:hidden space-y-6 mt-6">
                     {filteredCommittee.length === 0 ? (
                         <div className="text-center text-gray-500 p-6 bg-white rounded-lg shadow-md">
                             কোনো তথ্য পাওয়া যায়নি
@@ -174,24 +217,15 @@ const Committee = () => {
                                     {/* Header with Image and Basic Info */}
                                     <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                                         <div className="flex-shrink-0 mx-auto sm:mx-0">
-                                            {member.image ? (
-                                                <img
-                                                    src={member.image}
-                                                    alt={member.name}
-                                                    className="w-24 h-24 rounded-full object-cover border-4 border-blue-100 shadow-md"
-                                                    onError={(e) => {
-                                                        e.target.src = `data:image/svg+xml;base64,${btoa(`<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <img
+                                                src={member.image || `data:image/svg+xml;base64,${btoa(`<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="96" height="96" fill="#E5E7EB"/>
 <circle cx="48" cy="36" r="15" fill="#9CA3AF"/>
 <path d="M15 81c0-18.225 14.775-33 33-33s33 14.775 33 33" fill="#9CA3AF"/>
-</svg>`)}`;
-                                                    }}
-                                                />
-                                            ) : (
-                                                <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                                                    No Image
-                                                </div>
-                                            )}
+</svg>`)}`}
+                                                alt={member.name}
+                                                className="w-24 h-24 rounded-full object-cover border-4 border-blue-100 shadow-md"
+                                            />
                                         </div>
                                         <div className="flex-1 text-center sm:text-left">
                                             <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
@@ -217,20 +251,6 @@ const Committee = () => {
                                                 <a href={`tel:${member.contact}`} className="text-blue-600 font-medium hover:text-blue-800 transition-colors">
                                                     {member.contact}
                                                 </a>
-                                            </div>
-                                            <div className="flex flex-col sm:flex-row sm:items-start">
-                                                <span className="text-sm font-semibold text-gray-600 mb-1 sm:mb-0 sm:w-24">
-                                                    ইমেইল:
-                                                </span>
-                                                <a href={`mailto:${member.email}`} className="text-green-600 font-medium hover:text-green-800 transition-colors break-all">
-                                                    {member.email}
-                                                </a>
-                                            </div>
-                                            <div className="flex flex-col sm:flex-row sm:items-start">
-                                                <span className="text-sm font-semibold text-gray-600 mb-1 sm:mb-0 sm:w-24">
-                                                    ঠিকানা:
-                                                </span>
-                                                <span className="text-gray-700">{member.address}</span>
                                             </div>
                                         </div>
                                     </div>

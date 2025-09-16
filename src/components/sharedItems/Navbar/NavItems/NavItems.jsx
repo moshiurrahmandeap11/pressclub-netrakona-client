@@ -56,7 +56,7 @@ const NavItems = () => {
         }
         onClick={() => setIsOpen(false)}
       >
-        মিডিয়া
+        সাংবাদিকবৃন্দ
       </NavLink>
       <NavLink
         to="/committee"

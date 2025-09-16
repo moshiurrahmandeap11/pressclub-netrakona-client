@@ -9,7 +9,8 @@ const MemberList = () => {
     designation: '',
     occupation: '',
     address: '',
-    contact: ''
+    contact: '',
+    admitDate: ''
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -31,7 +32,7 @@ const MemberList = () => {
         updatedAt: item.updatedAt
       }));
       setMembers(formattedData);
-    } catch (err) {
+    } catch  {
       setError('সদস্য তালিকা লোড করতে ব্যর্থ।');
     }
   };
@@ -48,7 +49,8 @@ const MemberList = () => {
       designation: '',
       occupation: '',
       address: '',
-      contact: ''
+      contact: '',
+      admitDate: ''
     });
     setIsModalOpen(true);
     setError(null);
@@ -62,7 +64,8 @@ const MemberList = () => {
       designation: member.designation,
       occupation: member.occupation,
       address: member.address,
-      contact: member.contact
+      contact: member.contact,
+      admitDate: member.admitDate || ''
     });
     setIsModalOpen(true);
     setError(null);
@@ -80,7 +83,7 @@ const MemberList = () => {
       } else {
         setError('সদস্য মুছতে ব্যর্থ।');
       }
-    } catch (err) {
+    } catch  {
       setError('সদস্য মুছতে সমস্যা হয়েছে।');
     }
   };
@@ -123,7 +126,7 @@ const MemberList = () => {
     } else {
       setError("সদস্য যোগ/আপডেট করতে ব্যর্থ।");
     }
-  } catch (err) {
+  } catch  {
     setError("সার্ভারের সাথে সংযোগে সমস্যা হয়েছে।");
   }
 };
@@ -132,7 +135,7 @@ const MemberList = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">সদস্য তালিকা</h2>
+        <h2 className="text-2xl font-bold">সাধারণ পরিষদ</h2>
         <button
           onClick={handleAddMember}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -161,13 +164,14 @@ const MemberList = () => {
         <th className="px-4 py-3 text-left">পেশা</th>
         <th className="px-4 py-3 text-left">ঠিকানা</th>
         <th className="px-4 py-3 text-left">যোগাযোগ</th>
+        <th className="px-4 py-3 text-left">যোগদানের তারিখ</th>
         <th className="px-4 py-3 text-center">ক্রিয়াকলাপ</th>
       </tr>
     </thead>
     <tbody>
       {members.length === 0 ? (
         <tr>
-          <td colSpan="6" className="text-center py-6 text-gray-500">
+          <td colSpan="7" className="text-center py-6 text-gray-500">
             কোনো সদস্য নেই
           </td>
         </tr>
@@ -184,6 +188,7 @@ const MemberList = () => {
             <td className="px-4 py-3 border-b">{member.occupation}</td>
             <td className="px-4 py-3 border-b">{member.address}</td>
             <td className="px-4 py-3 border-b">{member.contact}</td>
+            <td className="px-4 py-3 border-b">{member.admitDate}</td>
             <td className="px-4 py-3 border-b flex justify-center space-x-3">
               <button
                 onClick={() => handleEditMember(member)}
@@ -264,6 +269,17 @@ const MemberList = () => {
                   type="text"
                   name="contact"
                   value={formData.contact}
+                  onChange={handleInputChange}
+                  className="w-full border px-3 py-2 rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">যোগদানের তারিখ</label>
+                <input
+                  type="date"
+                  name="admitDate"
+                  value={formData.admitDate}
                   onChange={handleInputChange}
                   className="w-full border px-3 py-2 rounded"
                   required

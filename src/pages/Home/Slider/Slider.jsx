@@ -122,8 +122,8 @@ const Slider = () => {
               />
               {/* Overlay Content */}
               {(slide.title || slide.description) && (
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                  <div className="text-center text-white p-6 max-w-2xl">
+                <div className="absolute inset-0  bg-opacity-40 flex items-center justify-center">
+                  <div className="text-center text-transparent p-6 max-w-2xl">
                     {slide.title && (
                       <h2 className="text-3xl font-bold mb-4 drop-shadow-lg">
                         {slide.title}

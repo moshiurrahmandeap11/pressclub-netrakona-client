@@ -386,6 +386,7 @@ const AboutUs = () => {
                         <th className="px-4 py-3 text-center text-sm font-medium">পেশা</th>
                         <th className="px-4 py-3 text-center text-sm font-medium">ঠিকানা</th>
                         <th className="px-4 py-3 text-center text-sm font-medium">মোবাইল</th>
+                        <th className="px-4 py-3 text-center text-sm font-medium">যোগদানের তারিখ</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -408,6 +409,7 @@ const AboutUs = () => {
                             <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.occupation}</td>
                             <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.address}</td>
                             <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.contact}</td>
+                            <td className="px-4 py-3 text-sm text-center text-gray-900 border-b">{member.admitDate}</td>
                           </tr>
                         ))
                       )}

@@ -3,6 +3,19 @@ import { useNavigate } from "react-router";
 
 const Footer = () => {
   const navigate = useNavigate();
+
+  // বর্তমান সময় আনো
+  const now = new Date();
+  const formattedTime = now.toLocaleString("bn-BD", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+
   return (
     <footer className="bg-gray-200 border-t border-gray-300 py-8">
       <div className="container mx-auto px-4">
@@ -36,7 +49,7 @@ const Footer = () => {
 
         {/* Bottom Info */}
         <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-10 text-gray-700 text-sm">
-          <p>সাইটটি সর্বশেষ হালনাগাদ করা হয়েছে : ২০২৫-০৮-২৮ ২০:২৭:১৯</p>
+          <p>সাইটটি সর্বশেষ হালনাগাদ করা হয়েছে : {formattedTime}</p>
           <p>
             Designed By{" "}
             <a

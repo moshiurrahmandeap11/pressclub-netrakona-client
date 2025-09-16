@@ -77,7 +77,7 @@ const Media = () => {
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
                     {title}
                 </h2>
-                <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
+                <div className="w-full h-1 bg-blue-600 mx-auto"></div>
             </div>
 
             {/* Search Bar */}

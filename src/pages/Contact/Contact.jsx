@@ -142,10 +142,9 @@ const Contact = () => {
                 {/* Page Header */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4 flex items-center justify-center gap-4">
-                        <span className="text-5xl">📞</span>
                         যোগাযোগ
                     </h1>
-                    <div className="w-32 h-1 bg-blue-600 mx-auto mb-6"></div>
+                    <div className="w-full h-1 bg-blue-600 mx-auto mb-6"></div>
                     <p className="text-gray-600 text-lg sm:text-xl max-w-2xl mx-auto">
                         আমাদের সাথে যোগাযোগ করুন। আমরা সর্বদা আপনার সেবায় নিয়োজিত।
                     </p>

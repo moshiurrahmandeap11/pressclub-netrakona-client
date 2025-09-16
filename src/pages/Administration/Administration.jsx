@@ -290,7 +290,7 @@ const Administration = () => {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
             প্রশাসন
           </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-700 mx-auto rounded-full"></div>
+          <div className="w-full h-1 bg-gradient-to-r from-blue-600 to-blue-700 mx-auto rounded-full"></div>
           <p className="text-gray-600 mt-4 text-lg">
             আমাদের সংস্থার নেতৃত্ব ও পরিচালনা
           </p>

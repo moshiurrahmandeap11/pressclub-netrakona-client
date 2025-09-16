@@ -153,7 +153,7 @@ const Gallery = () => {
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
                         গ্যালারি
                     </h1>
-                    <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
+                    <div className="w-full h-1 bg-blue-600 mx-auto"></div>
                     <p className="text-gray-600 mt-4 text-lg">প্রেস ক্লাবের স্মরণীয় মুহূর্তসমূহ</p>
                 </div>
 

@@ -28,7 +28,7 @@ const PermanentMember = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:3000/permanent-member', {
+      const response = await axios.get('https://pressclub-netrakona-server.vercel.app/permanent-member', {
         timeout: 5000 // Set a 5-second timeout to avoid hanging
       });
       const formattedData = response.data.map(item => ({
@@ -134,7 +134,7 @@ const PermanentMember = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.delete(`http://localhost:3000/permanent-member/${id}`);
+        const response = await axios.delete(`https://pressclub-netrakona-server.vercel.app/permanent-member/${id}`);
         if (response.status === 200) {
           setMembers(members.filter((member) => member.id !== id));
           setSuccess('স্থায়ী সদস্য সফলভাবে মুছে ফেলা হয়েছে।');
@@ -159,8 +159,8 @@ const PermanentMember = () => {
     e.preventDefault();
     try {
       const url = currentMember
-        ? `http://localhost:3000/permanent-member/${currentMember.id}`
-        : 'http://localhost:3000/permanent-member';
+        ? `https://pressclub-netrakona-server.vercel.app/permanent-member/${currentMember.id}`
+        : 'https://pressclub-netrakona-server.vercel.app/permanent-member';
       const method = currentMember ? 'PATCH' : 'POST';
 
       const response = await axios({

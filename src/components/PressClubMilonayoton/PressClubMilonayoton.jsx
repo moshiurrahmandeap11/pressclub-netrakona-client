@@ -13,11 +13,11 @@ const PressClubMilonayoton = () => {
       setError(null);
       try {
         // Fetch images
-        const imagesResponse = await axios.get('http://localhost:3000/hallroom-images');
+        const imagesResponse = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom-images');
         setImages(imagesResponse.data.map(img => img.image));
 
         // Fetch hall room data (take the first one for display)
-        const hallRoomResponse = await axios.get('http://localhost:3000/hallroom');
+        const hallRoomResponse = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom');
         if (hallRoomResponse.data.length > 0) {
           setHallRoom(hallRoomResponse.data[0]);
         }

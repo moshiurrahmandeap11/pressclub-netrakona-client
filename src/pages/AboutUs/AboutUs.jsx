@@ -106,7 +106,7 @@ const AboutUs = () => {
     try {
       setCommitteeLoading(true);
       setCommitteeError(null);
-      const response = await axios.get('http://localhost:3000/permanent-member', {
+      const response = await axios.get('https://pressclub-netrakona-server.vercel.app/permanent-member', {
         timeout: 5000 // 5-second timeout to prevent hanging
       });
       const formattedMembers = response.data.map(item => ({
@@ -174,7 +174,7 @@ const AboutUs = () => {
         const [historyResponse, objectivesResponse, committeeResponse] = await Promise.all([
           axios.get('https://pressclub-netrakona-server.vercel.app/pc-history', { timeout: 5000 }),
           axios.get('https://pressclub-netrakona-server.vercel.app/mishon-vishon', { timeout: 5000 }),
-          axios.get('http://localhost:3000/permanent-member', { timeout: 5000 })
+          axios.get('https://pressclub-netrakona-server.vercel.app/permanent-member', { timeout: 5000 })
         ]);
 
         setHistory(historyResponse.data);

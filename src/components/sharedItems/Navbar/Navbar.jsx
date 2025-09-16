@@ -31,8 +31,6 @@ const Navbar = () => {
         }
     }, [slides.length]);
 
-    console.log(slides);
-
     return (
         <div className="relative">
             {/* Navbar with Slideshow Background */}

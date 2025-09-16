@@ -40,7 +40,7 @@ const PressClubMilonayotonAdmin = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/hallroom', { timeout: 5000 });
+        const response = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom', { timeout: 5000 });
         setHallRooms(response.data);
         localStorage.setItem('hallRoomData', JSON.stringify(response.data));
       } catch (err) {
@@ -148,13 +148,13 @@ const PressClubMilonayotonAdmin = () => {
 
       // POST or PATCH based on whether editing
       if (editId) {
-        await axios.patch(`http://localhost:3000/hallroom/${editId}`, hallRoomData, { timeout: 5000 });
+        await axios.patch(`https://pressclub-netrakona-server.vercel.app/hallroom/${editId}`, hallRoomData, { timeout: 5000 });
       } else {
-        await axios.post('http://localhost:3000/hallroom', hallRoomData, { timeout: 5000 });
+        await axios.post('https://pressclub-netrakona-server.vercel.app/hallroom', hallRoomData, { timeout: 5000 });
       }
 
       // Refresh data
-      const response = await axios.get('http://localhost:3000/hallroom', { timeout: 5000 });
+      const response = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom', { timeout: 5000 });
       setHallRooms(response.data);
       localStorage.setItem('hallRoomData', JSON.stringify(response.data));
 
@@ -205,7 +205,7 @@ const PressClubMilonayotonAdmin = () => {
       const imageUrl = imgResponse.data.data.url;
 
       // save only image url to backend
-      await axios.post("http://localhost:3000/hallroom-images", { image: imageUrl });
+      await axios.post("https://pressclub-netrakona-server.vercel.app/hallroom-images", { image: imageUrl });
 
       Swal.fire("Success!", "Image added successfully.", "success");
 
@@ -236,8 +236,8 @@ const PressClubMilonayotonAdmin = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:3000/hallroom/${id}`, { timeout: 5000 });
-        const response = await axios.get('http://localhost:3000/hallroom', { timeout: 5000 });
+        await axios.delete(`https://pressclub-netrakona-server.vercel.app/hallroom/${id}`, { timeout: 5000 });
+        const response = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom', { timeout: 5000 });
         setHallRooms(response.data);
         localStorage.setItem('hallRoomData', JSON.stringify(response.data));
         Swal.fire('Deleted!', 'Hall room deleted successfully.', 'success');

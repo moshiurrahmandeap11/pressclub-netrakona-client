@@ -288,9 +288,15 @@ const Contact = () => {
                                 {quickContactData.location.length > 0 && (
                                     <div className="group cursor-pointer">
                                         <div className="bg-green-50 rounded-xl p-6 group-hover:bg-green-100 transition-colors duration-300">
-                                            <span className="text-3xl block mb-3">📍</span>
-                                            <h3 className="font-semibold text-gray-800 mb-2">অফিসে আসুন</h3>
-                                            <p className="text-sm text-gray-600">{quickContactData.location[0].value}</p>
+                                            <iframe
+                                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d452.448176491258!2d90.7312439328707!3d24.87800564628195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3756fd14d0ad5be7%3A0x2224473412d09e31!2sNetrokona%20Press%20Club!5e0!3m2!1sen!2sbd!4v1757936107371!5m2!1sen!2sbd"
+                                                width="100%"
+                                                height="200"
+                                                style={{ border: 0 }}
+                                                allowFullScreen=""
+                                                loading="lazy"
+                                                referrerPolicy="no-referrer-when-downgrade"
+                                            ></iframe>
                                         </div>
                                     </div>
                                 )}
@@ -300,6 +306,7 @@ const Contact = () => {
                                             <div className="bg-purple-50 rounded-xl p-6 group-hover:bg-purple-100 transition-colors duration-300">
                                                 <span className="text-3xl block mb-3">📱</span>
                                                 <h3 className="font-semibold text-gray-800 mb-2">ফোন করুন</h3>
+                                                <h3 className="font-semibold text-gray-800 mb-2">সাধারণ সম্পাদক</h3>
                                                 <p className="text-sm text-gray-600">{quickContactData.phone[0].value}</p>
                                             </div>
                                         </a>

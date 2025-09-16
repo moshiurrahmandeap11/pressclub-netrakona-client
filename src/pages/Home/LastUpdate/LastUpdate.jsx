@@ -75,7 +75,7 @@ const LastUpdate = () => {
   return (
     <div className="w-full max-w-2xl p-4">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        সর্বশেষ খবর
+        নোটিশ
       </h1>
       <div
         ref={scrollRef}
@@ -110,7 +110,7 @@ const LastUpdate = () => {
           onClick={handleButtonClick}
           className="px-4 py-2 bg-green-600 cursor-pointer text-white rounded-md hover:bg-blue-700 transition-colors"
         >
-          সকল খবর
+          সকল নোটিশ
         </button>
       </div>
     </div>

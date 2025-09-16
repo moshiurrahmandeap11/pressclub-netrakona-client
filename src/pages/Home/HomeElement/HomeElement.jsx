@@ -22,31 +22,25 @@ const HomeElement = () => {
               onClick={() => navigate("/about-us?tab=history")}
               className="cursor-pointer hover:underline"
             >
-              ইতিহাস ও কার্যাবলী
+              ইতিহাস 
             </li>
             <li
               onClick={() => navigate("/about-us?tab=mission")}
               className="cursor-pointer hover:underline"
             >
-              মিশন ও ভিশন
+              আদর্শ ও উদ্দেশ্য
             </li>
             <li
               onClick={() => navigate("/about-us?tab=members")}
               className="cursor-pointer hover:underline"
             >
-              সাংগঠনিক কাঠামো
-            </li>
-            <li
-              onClick={() => navigate("/about-us?tab=success")}
-              className="cursor-pointer hover:underline"
-            >
-              সাফল্য ও অর্জন
+              প্রতিষ্ঠাকালীন সদস্যবৃন্দ
             </li>
             <li
               onClick={() => navigate("/about-us?tab=member-list")}
               className="cursor-pointer hover:underline"
             >
-              সদস্য তালিকা
+              সাধারণ পরিষদ
             </li>
           </ul>
         </div>
@@ -70,7 +64,7 @@ const HomeElement = () => {
         </div>
         {/* Media */}
         <div className="bg-blue-200 p-4 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold text-gray-800 mb-2">মিডিয়া</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">সাংবাদিকবৃন্দ</h2>
           <ul className="list-disc list-inside text-gray-700">
             <li
               onClick={() => navigateToMedia("Electronic")}
@@ -82,7 +76,7 @@ const HomeElement = () => {
               onClick={() => navigateToMedia("Print")}
               className="cursor-pointer hover:underline"
             >
-              প্রিন্ট মিডিয়া
+              প্রিন্ট ও অনলাইন মিডিয়া
             </li>
           </ul>
         </div>

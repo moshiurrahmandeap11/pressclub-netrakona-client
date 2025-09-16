@@ -41,7 +41,7 @@ const Media = () => {
 
     const tabs = [
         { key: 'electronic', label: 'ইলেকট্রনিক মিডিয়া' },
-        { key: 'print', label: 'প্রিন্ট মিডিয়া' }
+        { key: 'print', label: 'প্রিন্ট ও অনলাইন মিডিয়া' }
     ];
 
     if (loading) {

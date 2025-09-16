@@ -12,6 +12,7 @@ const Navbar = () => {
         const fetchSlides = async () => {
             try {
                 const response = await axios.get('https://pressclub-netrakona-server.vercel.app/header-slide');
+                console.log(response.data);
                 setSlides(response.data);
             } catch (error) {
                 console.error('Error fetching slides:', error);
@@ -30,34 +31,42 @@ const Navbar = () => {
         }
     }, [slides.length]);
 
+    console.log(slides);
+
     return (
         <div className="relative">
             {/* Navbar with Slideshow Background */}
             <nav className="relative h-24 md:h-28 lg:h-60 text-white rounded-md overflow-hidden">
                 {/* Slideshow Background */}
                 <div className="absolute inset-0">
-                    {slides.length > 0 ? (
-                        slides.map((slide, index) => (
-                            <div
-                                key={slide._id}
-                                className={`absolute inset-0 transition-opacity duration-1000 ${
-                                    index === currentSlide ? 'opacity-100' : 'opacity-0'
-                                }`}
-                            >
-                                <div
-                                    className="w-full h-full bg-cover bg-center bg-no-repeat"
-                                    style={{ backgroundImage: `url(${slide.images.images.imageUrl})` }}
-                                >
-                                    {/* Light blue overlay */}
-                                    <div className="absolute inset-0  bg-opacity-75"></div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                            No slides available
-                        </div>
-                    )}
+{slides.length > 0 ? (
+  slides.map((slide, index) => (
+    <div
+      key={slide._id}
+      className={`absolute inset-0 transition-opacity duration-1000 ${
+        index === currentSlide ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div
+        className="w-full h-full bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${
+            slide.imageUrl ||
+            "https://via.placeholder.com/1200x400?text=Slide+Not+Found"
+          })`,
+        }}
+      >
+        {/* Overlay (optional) */}
+        <div className="absolute inset-0  bg-opacity-50"></div>
+      </div>
+    </div>
+  ))
+) : (
+  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+    No slides available
+  </div>
+)}
+
                 </div>
 
                 {/* Main Content */}

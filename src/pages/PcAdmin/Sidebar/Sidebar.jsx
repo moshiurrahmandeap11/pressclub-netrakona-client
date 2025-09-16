@@ -50,19 +50,25 @@ const Sidebar = ({ onViewChange, currentView }) => {
                         className={`${navItemClasses} ${currentView === 'mishon-vishon' ? activeClasses : inactiveClasses}`}
                         onClick={() => onViewChange('mishon-vishon')}
                     >
-                        মিশন ও ভিশন   
+                        আদর্শ ও উদ্দেশ্য   
                     </li>
                     <li
-                        className={`${navItemClasses} ${currentView === 'achievement' ? activeClasses : inactiveClasses}`}
-                        onClick={() => onViewChange('achievement')}
+                        className={`${navItemClasses} ${currentView === 'permanentMember' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('permanentMember')}
                     >
-                        সাফল্য ও অর্জন   
+                        প্রতিষ্ঠাকালীন সদস্য   
+                    </li>
+                    <li
+                        className={`${navItemClasses} ${currentView === 'pressclub' ? activeClasses : inactiveClasses}`}
+                        onClick={() => onViewChange('pressclub')}
+                    >
+                        প্রেস ক্লাব মিলনায়তন   
                     </li>
                     <li
                         className={`${navItemClasses} ${currentView === 'member-list' ? activeClasses : inactiveClasses}`}
                         onClick={() => onViewChange('member-list')}
                     >
-                        সদস্য তালিকা   
+                        সাধারণ পরিষদ   
                     </li>
                     <li
                         className={`${navItemClasses} ${currentView === 'adminstration' ? activeClasses : inactiveClasses}`}

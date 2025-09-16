@@ -14,6 +14,8 @@ import MediaAdmin from "./MediaAdmin/MediaAdmin";
 import CommitteeAdmin from "./CommitteeAdmin/CommitieeAdmin";
 import GalleryAdmin from "./GalleryAdmin/GalleryAdmin";
 import ContactAdmin from "./ContactAdmin/ContactAdmin";
+import PermanentMember from "./PermanentMember/PermanentMember";
+import PressClubMilonayotonAdmin from "./PressClubMilonayotonAdmin/PressClubMilonayotonAdmin";
 
 const PcAdmin = () => {
   const [currentView, setCurrentView] = useState("updates");
@@ -38,10 +40,12 @@ const PcAdmin = () => {
         return <SliderAdmin></SliderAdmin>;
       case "mishon-vishon":
         return <MIshonVishon></MIshonVishon>;
-      case "achievement":
-        return <Achievement></Achievement>;
+      case "pressclub":
+        return <PressClubMilonayotonAdmin></PressClubMilonayotonAdmin>;
       case "member-list":
         return <MemberList></MemberList>;
+      case "permanentMember":
+        return <PermanentMember></PermanentMember>;
       case "adminstration":
         return <AdminsTrationAdmin></AdminsTrationAdmin>;
       case "media":

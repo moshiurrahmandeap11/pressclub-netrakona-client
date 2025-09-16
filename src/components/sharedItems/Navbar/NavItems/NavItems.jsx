@@ -99,7 +99,7 @@ const NavItems = () => {
 
   return (
     <div className="w-full">
-      <nav className="bg-gradient-to-r from-teal-600 to-green-500 shadow-xl">
+      <nav className="bg-white/30 shadow-xl">
         {/* Hamburger Button for Mobile */}
         <div className="md:hidden flex justify-end p-4">
           <button

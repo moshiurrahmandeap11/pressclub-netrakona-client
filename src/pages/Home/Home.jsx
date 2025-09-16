@@ -50,7 +50,7 @@ const Home = () => {
     animate={{ opacity: [1, 0, 1] }} // blink
     transition={{ duration: 1, repeat: Infinity }} // loop
   >
-    প্রেস ক্লাব মিলনায়তন
+    প্রেসক্লাব মিলনায়তন
   </motion.h1>
 </motion.div>
 

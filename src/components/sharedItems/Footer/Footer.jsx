@@ -12,7 +12,7 @@ const Footer = () => {
             className="hover:text-blue-600 cursor-pointer transition-colors"
             onClick={() => navigate("/privacy-policy")}
           >
-            <h3 className="font-bold mb-1">গুপোনীয়তার নীতিমালা</h3>
+            <h3 className="font-bold mb-1">গোপনীয়তার নীতিমালা</h3>
           </div>
           <div
             className="hover:text-blue-600 cursor-pointer transition-colors"

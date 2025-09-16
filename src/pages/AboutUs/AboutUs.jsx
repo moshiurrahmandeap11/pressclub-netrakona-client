@@ -289,6 +289,13 @@ const AboutUs = () => {
           {activeTab === 'প্রতিষ্ঠাকালীন সদস্যবৃন্দ' && (
             <div id="members">
               <h2 className="text-2xl sm:text-3xl text-center font-bold text-gray-800 mb-6">প্রতিষ্ঠাকালীন সদস্যবৃন্দ</h2>
+                              {/* Statistics Card */}
+                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div className="text-center">
+                        <div className="text-3xl font-bold text-blue-600">{memoizedCommitteeMembers.length}</div>
+                        <div className="text-gray-600 font-medium">মোট প্রতিষ্ঠাকালীন সদস্য</div>
+                    </div>
+                </div>
               {committeeLoading ? (
                 <div className="flex justify-center items-center py-8">
                   <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
@@ -356,6 +363,15 @@ const AboutUs = () => {
                   {memberListLoading ? 'লোড হচ্ছে...' : 'রিফ্রেশ'}
                 </button>
               </div>
+
+                         {/* Statistics Card */}
+                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div className="text-center">
+                        <div className="text-3xl font-bold text-blue-600">{members.length}</div>
+                        <div className="text-gray-600 font-medium">মোট কমিটির সদস্য</div>
+                    </div>
+                </div>
+
               {memberListLoading ? (
                 <div className="flex justify-center items-center py-8">
                   <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>

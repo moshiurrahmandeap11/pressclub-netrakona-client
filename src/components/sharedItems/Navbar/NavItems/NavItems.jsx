@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router';
+import React, { useState } from "react";
+import { NavLink } from "react-router";
 
 const NavItems = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +16,7 @@ const NavItems = () => {
           `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
            transition-all duration-300 ease-in-out 
            hover:bg-green-400 hover:scale-105 hover:shadow-lg 
-           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
+           ${isActive ? "bg-blue-400 font-bold shadow-md" : "bg-blue-400"}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -28,7 +28,7 @@ const NavItems = () => {
           `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
            transition-all duration-300 ease-in-out 
            hover:bg-green-400 hover:scale-105 hover:shadow-lg 
-           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
+           ${isActive ? "bg-green-500 font-bold shadow-md" : "bg-blue-400"}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -40,7 +40,7 @@ const NavItems = () => {
           `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
            transition-all duration-300 ease-in-out 
            hover:bg-green-400 hover:scale-105 hover:shadow-lg 
-           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
+           ${isActive ? "bg-green-500 font-bold shadow-md" : "bg-blue-400"}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -52,7 +52,7 @@ const NavItems = () => {
           `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
            transition-all duration-300 ease-in-out 
            hover:bg-green-400 hover:scale-105 hover:shadow-lg 
-           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
+           ${isActive ? "bg-green-500 font-bold shadow-md" : "bg-blue-400"}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -64,7 +64,7 @@ const NavItems = () => {
           `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
            transition-all duration-300 ease-in-out 
            hover:bg-green-400 hover:scale-105 hover:shadow-lg 
-           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
+           ${isActive ? "bg-green-500 font-bold shadow-md" : "bg-blue-400"}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -76,7 +76,7 @@ const NavItems = () => {
           `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
            transition-all duration-300 ease-in-out 
            hover:bg-green-400 hover:scale-105 hover:shadow-lg 
-           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
+           ${isActive ? "bg-green-500 font-bold shadow-md" : "bg-blue-400"}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -88,7 +88,7 @@ const NavItems = () => {
           `flex-1 text-center px-4 py-3 text-white font-medium rounded-lg 
            transition-all duration-300 ease-in-out 
            hover:bg-green-400 hover:scale-105 hover:shadow-lg 
-           ${isActive ? 'bg-green-500 font-bold shadow-md' : 'bg-green-600'}`
+           ${isActive ? "bg-green-500 font-bold shadow-md" : "bg-blue-400"}`
         }
         onClick={() => setIsOpen(false)}
       >
@@ -104,7 +104,7 @@ const NavItems = () => {
         <div className="md:hidden flex justify-end p-4">
           <button
             onClick={toggleMenu}
-            className="text-white focus:outline-none hover:bg-green-400 p-2 rounded-full transition-colors duration-300"
+            className="bg-blue-400 focus:outline-none hover:bg-green-400 p-2 rounded-full transition-colors duration-300"
             aria-label="Toggle menu"
           >
             <svg
@@ -118,7 +118,7 @@ const NavItems = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d={isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16m-7 6h7'}
+                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}
               />
             </svg>
           </button>
@@ -126,7 +126,7 @@ const NavItems = () => {
         {/* Navigation Items */}
         <div
           className={`${
-            isOpen ? 'flex' : 'hidden'
+            isOpen ? "flex" : "hidden"
           } md:flex flex-col md:flex-row justify-center items-center w-full px-6 py-4 md:py-2 gap-3 md:gap-4`}
         >
           {navItems}

@@ -92,7 +92,7 @@ const LastUpdate = () => {
       <div className="mt-4 flex justify-end">
         <button
           onClick={handleButtonClick}
-          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-blue-400 cursor-pointer text-white rounded-md hover:bg-green-400 transition-colors"
         >
           সকল নোটিশ
         </button>

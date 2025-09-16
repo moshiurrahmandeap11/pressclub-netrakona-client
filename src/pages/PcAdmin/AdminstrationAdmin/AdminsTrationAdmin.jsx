@@ -15,12 +15,18 @@ const AdminsTrationAdmin = () => {
     name: '',
     image: '',
     tenure: '',
-    contact: '',
-    email: '',
-    address: ''
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
+
+  // Default SVG avatar for placeholder
+  const defaultAvatar = `data:image/svg+xml;base64,${btoa(`
+    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" fill="#E5E7EB"/>
+      <circle cx="50" cy="40" r="20" fill="#9CA3AF"/>
+      <path d="M20 80C20 64.536 32.536 52 48 52H52C67.464 52 80 64.536 80 80" fill="#9CA3AF"/>
+    </svg>
+  `)}`;
 
   // Fetch data on component mount and tab change
   useEffect(() => {
@@ -91,9 +97,6 @@ const AdminsTrationAdmin = () => {
       name: '',
       image: '',
       tenure: '',
-      contact: '',
-      email: '',
-      address: ''
     });
     setImageFile(null);
     setImagePreview('');
@@ -113,9 +116,6 @@ const AdminsTrationAdmin = () => {
       name: item.name || '',
       image: item.image || '',
       tenure: item.tenure || '',
-      contact: item.contact || '',
-      email: item.email || '',
-      address: item.address || ''
     });
     setImagePreview(item.image || '');
     setIsModalOpen(true);
@@ -152,7 +152,7 @@ const AdminsTrationAdmin = () => {
       const submitData = {
         ...formData,
         image: imageUrl,
-        type: activeTab === 'president' ? 'president' : 'secretary'
+        type: activeTab === 'president' ? 'president' : 'secretary',
       };
 
       if (currentItem) {
@@ -243,19 +243,17 @@ const AdminsTrationAdmin = () => {
               <table className="min-w-full">
                 <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
                   <tr>
+                    <th className="px-4 py-3 text-left font-medium">ক্রমিক</th>
                     <th className="px-4 py-3 text-left font-medium">ছবি</th>
                     <th className="px-4 py-3 text-left font-medium">নাম</th>
                     <th className="px-4 py-3 text-left font-medium">মেয়াদকাল</th>
-                    <th className="px-4 py-3 text-left font-medium">যোগাযোগ</th>
-                    <th className="px-4 py-3 text-left font-medium">ইমেইল</th>
-                    <th className="px-4 py-3 text-left font-medium">ঠিকানা</th>
-                    <th className="px-4 py-3 text-center font-medium">ক্রিয়া</th>
+                    <th className="px-4 py-3 text-left font-medium">ক্রিয়া</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentData.length === 0 ? (
                     <tr>
-                      <td colSpan="7" className="text-center py-8 text-gray-500">
+                      <td colSpan="5" className="text-center py-8 text-gray-500">
                         কোনো {currentTitle} নেই
                       </td>
                     </tr>
@@ -267,18 +265,16 @@ const AdminsTrationAdmin = () => {
                           index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                         } hover:bg-blue-50`}
                       >
+                        <td className="px-4 py-3 border-b">{index + 1}</td>
                         <td className="px-4 py-3 border-b">
                           <img
-                            src={item.image || 'https://via.placeholder.com/50'}
+                            src={item.image || defaultAvatar}
                             alt={item.name}
                             className="w-12 h-12 rounded-full object-cover"
                           />
                         </td>
                         <td className="px-4 py-3 border-b font-medium">{item.name}</td>
                         <td className="px-4 py-3 border-b">{item.tenure}</td>
-                        <td className="px-4 py-3 border-b">{item.contact}</td>
-                        <td className="px-4 py-3 border-b">{item.email}</td>
-                        <td className="px-4 py-3 border-b">{item.address}</td>
                         <td className="px-4 py-3 border-b">
                           <div className="flex justify-center space-x-2">
                             <button
@@ -310,36 +306,19 @@ const AdminsTrationAdmin = () => {
                 <p className="text-gray-500">কোনো {currentTitle} নেই</p>
               </div>
             ) : (
-              currentData.map((item) => (
+              currentData.map((item, index) => (
                 <div key={item._id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
                   {/* Header with Image and Name */}
                   <div className="flex items-center space-x-3 mb-4">
                     <img
-                      src={item.image || 'https://via.placeholder.com/60'}
+                      src={item.image || defaultAvatar}
                       alt={item.name}
                       className="w-16 h-16 rounded-full object-cover flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-semibold text-gray-900 truncate">{item.name}</h3>
+                      <p className="text-sm text-gray-500">ক্রমিক: {index + 1}</p>
                       <p className="text-sm text-gray-500">{item.tenure}</p>
-                    </div>
-                  </div>
-
-                  {/* Details Grid */}
-                  <div className="space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center">
-                      <span className="text-sm font-medium text-gray-500 sm:w-20 flex-shrink-0">যোগাযোগ:</span>
-                      <span className="text-sm text-gray-900 sm:flex-1">{item.contact}</span>
-                    </div>
-                    
-                    <div className="flex flex-col sm:flex-row sm:items-center">
-                      <span className="text-sm font-medium text-gray-500 sm:w-20 flex-shrink-0">ইমেইল:</span>
-                      <span className="text-sm text-gray-900 sm:flex-1 break-all">{item.email}</span>
-                    </div>
-                    
-                    <div className="flex flex-col sm:flex-row">
-                      <span className="text-sm font-medium text-gray-500 sm:w-20 flex-shrink-0">ঠিকানা:</span>
-                      <span className="text-sm text-gray-900 sm:flex-1">{item.address}</span>
                     </div>
                   </div>
 
@@ -367,7 +346,7 @@ const AdminsTrationAdmin = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <h3 className="text-xl font-bold mb-6">
@@ -403,7 +382,7 @@ const AdminsTrationAdmin = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded px-3 py-2 font-bangla"
                     required
                   />
                 </div>
@@ -417,48 +396,9 @@ const AdminsTrationAdmin = () => {
                     value={formData.tenure}
                     onChange={handleInputChange}
                     placeholder="dd/mm/yyyy - dd/mm/yyyy"
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded px-3 py-2 font-bangla"
                     required
                   />
-                </div>
-
-                {/* Contact */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">যোগাযোগ *</label>
-                  <input
-                    type="text"
-                    name="contact"
-                    value={formData.contact}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    required
-                  />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">ইমেইল *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    required
-                  />
-                </div>
-
-                {/* Address */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">ঠিকানা *</label>
-                  <textarea
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    rows="3"
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    required
-                  ></textarea>
                 </div>
 
                 {/* Buttons */}

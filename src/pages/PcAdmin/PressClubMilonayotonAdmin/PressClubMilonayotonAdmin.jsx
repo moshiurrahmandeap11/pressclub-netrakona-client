@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 
 const PressClubMilonayotonAdmin = () => {
   const [hallRooms, setHallRooms] = useState([]);
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,46 +26,46 @@ const PressClubMilonayotonAdmin = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Fetch hall room data
+  // Fetch hall room data and images
   useEffect(() => {
-    const fetchHallRooms = async () => {
+    const fetchData = async () => {
       setLoading(true);
       setError(null);
 
-      // Check localStorage first
-      const cachedData = localStorage.getItem('hallRoomData');
-      if (cachedData) {
-        setHallRooms(JSON.parse(cachedData));
-        setLoading(false);
-        return;
-      }
-
       try {
-        const response = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom', { timeout: 5000 });
-        setHallRooms(response.data);
-        localStorage.setItem('hallRoomData', JSON.stringify(response.data));
+        // Check localStorage for hall room data
+        const cachedHallRoomData = localStorage.getItem('hallRoomData');
+        if (cachedHallRoomData) {
+          setHallRooms(JSON.parse(cachedHallRoomData));
+        } else {
+          const hallRoomResponse = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom', { timeout: 5000 });
+          setHallRooms(hallRoomResponse.data);
+          localStorage.setItem('hallRoomData', JSON.stringify(hallRoomResponse.data));
+        }
+
+        // Fetch images
+        const imagesResponse = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom-images', { timeout: 5000 });
+        setImages(imagesResponse.data);
       } catch (err) {
         console.error('Fetch error:', err.message, err.response?.data);
-        setError('Failed to fetch hall room data. Please try again.');
-        Swal.fire('Error!', 'Failed to fetch hall room data.', 'error');
+        setError('Failed to fetch data. Please try again.');
+        Swal.fire('Error!', 'Failed to fetch data.', 'error');
       } finally {
         setLoading(false);
       }
     };
-    fetchHallRooms();
+    fetchData();
   }, []);
 
   // Handle file selection for hall room modal
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
       if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
         setError('Please select a valid image (JPEG or PNG).');
         Swal.fire('Error!', 'Please select a valid image (JPEG or PNG).', 'error');
         return;
       }
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setError('Image size must be less than 5MB.');
         Swal.fire('Error!', 'Image size must be less than 5MB.', 'error');
@@ -80,12 +81,10 @@ const PressClubMilonayotonAdmin = () => {
   const handleImageFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
       if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
         Swal.fire('Error!', 'Please select a valid image (JPEG or PNG).', 'error');
         return;
       }
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         Swal.fire('Error!', 'Image size must be less than 5MB.', 'error');
         return;
@@ -120,7 +119,6 @@ const PressClubMilonayotonAdmin = () => {
     try {
       let imageUrl = editId ? hallRooms.find(room => room._id === editId)?.imageUrl : null;
 
-      // Upload new image to ImgBB if provided
       if (formData.image) {
         const resizedImage = await resizeImage(formData.image, 800, 600);
         const formDataUpload = new FormData();
@@ -133,7 +131,6 @@ const PressClubMilonayotonAdmin = () => {
         imageUrl = imgResponse.data.data.url;
       }
 
-      // Prepare data for API
       const hallRoomData = {
         imageUrl,
         seatNumber: Number(formData.seatNumber),
@@ -146,14 +143,12 @@ const PressClubMilonayotonAdmin = () => {
         halfDayRent: Number(formData.halfDayRent)
       };
 
-      // POST or PATCH based on whether editing
       if (editId) {
         await axios.patch(`https://pressclub-netrakona-server.vercel.app/hallroom/${editId}`, hallRoomData, { timeout: 5000 });
       } else {
         await axios.post('https://pressclub-netrakona-server.vercel.app/hallroom', hallRoomData, { timeout: 5000 });
       }
 
-      // Refresh data
       const response = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom', { timeout: 5000 });
       setHallRooms(response.data);
       localStorage.setItem('hallRoomData', JSON.stringify(response.data));
@@ -182,7 +177,7 @@ const PressClubMilonayotonAdmin = () => {
     }
   };
 
-  // Handle Add Image Only - now independent
+  // Handle Add Image Only
   const handleAddImage = async () => {
     if (!selectedImage) {
       Swal.fire('Error!', 'Please select an image first.', 'error');
@@ -191,12 +186,10 @@ const PressClubMilonayotonAdmin = () => {
 
     setUploading(true);
     try {
-      // resize the image before upload
       const resizedImage = await resizeImage(selectedImage, 800, 600);
       const formDataUpload = new FormData();
       formDataUpload.append("image", resizedImage);
 
-      // upload to imgbb
       const imgResponse = await axios.post("https://api.imgbb.com/1/upload", formDataUpload, {
         params: { key: "bf35be486f2b0f4b0c48958fcc4de90c" },
         timeout: 10000,
@@ -204,12 +197,13 @@ const PressClubMilonayotonAdmin = () => {
 
       const imageUrl = imgResponse.data.data.url;
 
-      // save only image url to backend
       await axios.post("https://pressclub-netrakona-server.vercel.app/hallroom-images", { image: imageUrl });
 
-      Swal.fire("Success!", "Image added successfully.", "success");
+      // Refresh images
+      const imagesResponse = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom-images', { timeout: 5000 });
+      setImages(imagesResponse.data);
 
-      // clear image fields
+      Swal.fire("Success!", "Image added successfully.", "success");
       setSelectedImage(null);
       setImagePreview(null);
       setIsImageModalOpen(false);
@@ -221,11 +215,11 @@ const PressClubMilonayotonAdmin = () => {
     }
   };
 
-  // Handle delete
-  const handleDelete = async (id) => {
+  // Handle image delete
+  const handleImageDelete = async (id) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: 'This hall room will be deleted permanently!',
+      text: 'This image will be deleted permanently!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -236,15 +230,13 @@ const PressClubMilonayotonAdmin = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`https://pressclub-netrakona-server.vercel.app/hallroom/${id}`, { timeout: 5000 });
-        const response = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom', { timeout: 5000 });
-        setHallRooms(response.data);
-        localStorage.setItem('hallRoomData', JSON.stringify(response.data));
-        Swal.fire('Deleted!', 'Hall room deleted successfully.', 'success');
+        await axios.delete(`https://pressclub-netrakona-server.vercel.app/hallroom-images/${id}`, { timeout: 5000 });
+        const imagesResponse = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom-images', { timeout: 5000 });
+        setImages(imagesResponse.data);
+        Swal.fire('Deleted!', 'Image deleted successfully.', 'success');
       } catch (err) {
-        console.error('Delete error:', err.message, err.response?.data);
-        setError('Failed to delete hall room. Please try again.');
-        Swal.fire('Error!', 'Failed to delete hall room.', 'error');
+        console.error('Delete image error:', err.message, err.response?.data);
+        Swal.fire('Error!', 'Failed to delete image.', 'error');
       }
     }
   };
@@ -291,7 +283,6 @@ const PressClubMilonayotonAdmin = () => {
         let width = img.width;
         let height = img.height;
 
-        // Maintain aspect ratio
         if (width > height) {
           if (width > maxWidth) {
             height = Math.round((height * maxWidth) / width);
@@ -307,7 +298,6 @@ const PressClubMilonayotonAdmin = () => {
         canvas.width = maxWidth;
         canvas.height = maxHeight;
 
-        // Center image with white background
         const offsetX = (maxWidth - width) / 2;
         const offsetY = (maxHeight - height) / 2;
         ctx.fillStyle = '#ffffff';
@@ -324,8 +314,40 @@ const PressClubMilonayotonAdmin = () => {
     });
   };
 
-  // Memoize hall rooms
+  // Delete hall room
+const handleDelete = async (id) => {
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: 'This hall room will be deleted permanently!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await axios.delete(`https://pressclub-netrakona-server.vercel.app/hallroom/${id}`, { timeout: 5000 });
+
+      // Refresh hall room list
+      const response = await axios.get('https://pressclub-netrakona-server.vercel.app/hallroom', { timeout: 5000 });
+      setHallRooms(response.data);
+      localStorage.setItem('hallRoomData', JSON.stringify(response.data));
+
+      Swal.fire('Deleted!', 'Hall room deleted successfully.', 'success');
+    } catch (err) {
+      console.error('Delete hall room error:', err.message, err.response?.data);
+      Swal.fire('Error!', 'Failed to delete hall room.', 'error');
+    }
+  }
+};
+
+
+  // Memoize hall rooms and images
   const memoizedHallRooms = useMemo(() => hallRooms, [hallRooms]);
+  const memoizedImages = useMemo(() => images, [images]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
@@ -349,14 +371,12 @@ const PressClubMilonayotonAdmin = () => {
               Retry
             </button>
           </div>
-        ) : memoizedHallRooms.length > 0 ? (
+        ) : (
           <>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">হল রুম তালিকা</h2>
-                <p className="text-sm text-gray-500">{memoizedHallRooms.length}টি রুম পাওয়া গেছে</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3">
+            {/* Images Section */}
+            <div className="mb-12">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold text-gray-800">আপলোড করা ছবি</h2>
                 <button
                   onClick={openImageModal}
                   className="inline-flex items-center px-4 py-2 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200"
@@ -364,8 +384,156 @@ const PressClubMilonayotonAdmin = () => {
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  ইমেজ যোগ করুন
+                  নতুন ছবি যোগ করুন
                 </button>
+              </div>
+              {memoizedImages.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {memoizedImages.map((image) => (
+                    <div key={image._id} className="relative group">
+                      <img
+                        src={image.image || 'https://via.placeholder.com/400x300?text=ইমেজ+নেই'}
+                        alt="Uploaded Image"
+                        className="w-full h-40 object-cover rounded-lg"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/400x300?text=ইমেজ+নেই';
+                        }}
+                      />
+                      <button
+                        onClick={() => handleImageDelete(image._id)}
+                        className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 bg-white rounded-xl shadow-md">
+                  <p className="text-gray-500">কোনো ছবি পাওয়া যায়নি</p>
+                </div>
+              )}
+            </div>
+
+            {/* Hall Rooms Section */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800 mb-2">হল রুম তালিকা</h2>
+                <p className="text-sm text-gray-500">{memoizedHallRooms.length}টি রুম পাওয়া গেছে</p>
+              </div>
+              <button
+                onClick={() => {
+                  setEditId(null);
+                  setFormData({
+                    image: null,
+                    seatNumber: '',
+                    capacity: '',
+                    bannerSize: '',
+                    soundSystem: '',
+                    table: '',
+                    sofa: '',
+                    fullDayRent: '',
+                    halfDayRent: ''
+                  });
+                  setPreviewUrl(null);
+                  setIsModalOpen(true);
+                }}
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                নতুন হল রুম যোগ করুন
+              </button>
+            </div>
+
+            {memoizedHallRooms.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {memoizedHallRooms.map((room) => (
+                  <div
+                    key={room._id}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  >
+                    <div className="relative h-48 bg-gray-100">
+                      <img
+                        src={room.imageUrl || 'https://via.placeholder.com/400x300?text=ইমেজ+নেই'}
+                        alt="Hall Room"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/400x300?text=ইমেজ+নেই';
+                        }}
+                      />
+                    </div>
+                    <div className="p-6">
+                      <div className="space-y-3 mb-4">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <span className="font-semibold text-gray-900 mr-2">আসন সংখ্যা:</span>
+                          <span>{room.seatNumber || 'N/A'}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <span className="font-semibold text-gray-900 mr-2">ধারণ ক্ষমতা:</span>
+                          <span>{room.capacity || 'N/A'}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <span className="font-semibold text-gray-900 mr-2">ব্যানার সাইজ:</span>
+                          <span>{room.bannerSize || 'N/A'}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <span className="font-semibold text-gray-900 mr-2">সাউন্ড সিস্টেম:</span>
+                          <span>{room.soundSystem || 'N/A'}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <span className="font-semibold text-gray-900 mr-2">টেবিল:</span>
+                          <span>{room.table || 'N/A'}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <span className="font-semibold text-gray-900 mr-2">সোফা:</span>
+                          <span>{room.sofa || 'N/A'}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <span className="font-semibold text-gray-900 mr-2">ভাড়া (সারাদিন):</span>
+                          <span className="text-green-600 font-medium">{room.fullDayRent || 'N/A'} টাকা</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <span className="font-semibold text-gray-900 mr-2">ভাড়া (অর্ধদিন):</span>
+                          <span className="text-green-600 font-medium">{room.halfDayRent || 'N/A'} টাকা</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          onClick={() => handleEdit(room)}
+                          className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                          সম্পাদনা
+                        </button>
+                        <button
+                          onClick={() => handleDelete(room._id)}
+                          className="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          মুছে ফেলুন
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white rounded-xl shadow-md">
+                <div className="text-gray-500 mb-4">
+                  <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">কোনো হল রুম তথ্য নেই</h3>
+                  <p className="text-gray-500">প্রথম হল রুমটি যোগ করুন</p>
+                </div>
                 <button
                   onClick={() => {
                     setEditId(null);
@@ -383,7 +551,7 @@ const PressClubMilonayotonAdmin = () => {
                     setPreviewUrl(null);
                     setIsModalOpen(true);
                   }}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -391,118 +559,8 @@ const PressClubMilonayotonAdmin = () => {
                   নতুন হল রুম যোগ করুন
                 </button>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {memoizedHallRooms.map((room) => (
-                <div
-                  key={room._id}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                >
-                  <div className="relative h-48 bg-gray-100">
-                    <img
-                      src={room.imageUrl || 'https://via.placeholder.com/400x300?text=ইমেজ+নেই'}
-                      alt="Hall Room"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x300?text=ইমেজ+নেই';
-                      }}
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 mr-2">আসন সংখ্যা:</span>
-                        <span>{room.seatNumber || 'N/A'}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 mr-2">ধারণ ক্ষমতা:</span>
-                        <span>{room.capacity || 'N/A'}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 mr-2">ব্যানার সাইজ:</span>
-                        <span>{room.bannerSize || 'N/A'}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 mr-2">সাউন্ড সিস্টেম:</span>
-                        <span>{room.soundSystem || 'N/A'}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 mr-2">টেবিল:</span>
-                        <span>{room.table || 'N/A'}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 mr-2">সোফা:</span>
-                        <span>{room.sofa || 'N/A'}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 mr-2">ভাড়া (সারাদিন):</span>
-                        <span className="text-green-600 font-medium">{room.fullDayRent || 'N/A'} টাকা</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 mr-2">ভাড়া (অর্ধদিন):</span>
-                        <span className="text-green-600 font-medium">{room.halfDayRent || 'N/A'} টাকা</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                      <button
-                        onClick={() => handleEdit(room)}
-                        className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                      >
-                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                        সম্পাদনা
-                      </button>
-                      <button
-                        onClick={() => handleDelete(room._id)}
-                        className="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
-                      >
-                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        মুছে ফেলুন
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            )}
           </>
-        ) : (
-          <div className="text-center py-12 bg-white rounded-xl shadow-md">
-            <div className="text-gray-500 mb-4">
-              <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">কোনো হল রুম তথ্য নেই</h3>
-              <p className="text-gray-500">প্রথম হল রুমটি যোগ করুন</p>
-            </div>
-            <button
-              onClick={() => {
-                setEditId(null);
-                setFormData({
-                  image: null,
-                  seatNumber: '',
-                  capacity: '',
-                  bannerSize: '',
-                  soundSystem: '',
-                  table: '',
-                  sofa: '',
-                  fullDayRent: '',
-                  halfDayRent: ''
-                });
-                setPreviewUrl(null);
-                setIsModalOpen(true);
-              }}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              নতুন হল রুম যোগ করুন
-            </button>
-          </div>
         )}
 
         {/* Hall Room Modal */}
@@ -517,7 +575,6 @@ const PressClubMilonayotonAdmin = () => {
                   <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>
                 )}
                 <form className="space-y-4">
-                  {/* Image Upload for Hall Room */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">হল রুমের ছবি</label>
                     <label
@@ -549,8 +606,6 @@ const PressClubMilonayotonAdmin = () => {
                       className="hidden"
                     />
                   </div>
-
-                  {/* Form Fields */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">আসন সংখ্যা</label>
                     <input

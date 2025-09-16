@@ -17,6 +17,8 @@ import AddImportantPerson from "../../pages/PcAdmin/ImportantPeopleAdmin/AddImpo
 import AddImportantLinks from "../../pages/PcAdmin/ImportantLinkAdmin/AddImportantLinks/AddImportantLinks"
 import AddHistory from "../../pages/AboutUs/AddHistory/AddHistory"
 import EditHistory from "../../pages/AboutUs/EditHistory/EditHistory"
+import PrivacyPolicy from "../../components/PrivacyPolicy/PrivacyPolicy"
+import TermsAndConditions from "../../components/Terms/Terms"
 
 export const router = createBrowserRouter([
     {
@@ -86,6 +88,14 @@ export const router = createBrowserRouter([
             {
                 path: "/edit-history/:id",
                 element: <ProtectedRoute><EditHistory></EditHistory></ProtectedRoute>
+            },
+            {
+                path:"/privacy-policy",
+                element: <PrivacyPolicy></PrivacyPolicy>
+            },
+            {
+                path: "/terms-and-conditions",
+                element: <TermsAndConditions></TermsAndConditions>
             }
         ]
     }

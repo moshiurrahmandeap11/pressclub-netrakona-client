@@ -12,7 +12,6 @@ const Navbar = () => {
         const fetchSlides = async () => {
             try {
                 const response = await axios.get('https://pressclub-netrakona-server.vercel.app/header-slide');
-                console.log(response.data);
                 setSlides(response.data);
             } catch (error) {
                 console.error('Error fetching slides:', error);

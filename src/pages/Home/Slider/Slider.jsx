@@ -18,7 +18,6 @@ const Slider = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Fetched slides:', data); // Debug log
         // Transform nested slider object to flat structure - FIXED for nested structure
         const transformedSlides = data.map(slide => ({
           id: slide._id,

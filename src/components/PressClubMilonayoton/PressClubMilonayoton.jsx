@@ -51,6 +51,7 @@ const PressClubMilonayoton = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4 text-center">প্রেস ক্লাব মিলনায়তন</h2>
+      
       {/* Image Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         {images.map((image, index) => (
@@ -68,7 +69,7 @@ const PressClubMilonayoton = () => {
 
       {/* Venue Details */}
       {hallRoom ? (
-        <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+        <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-lg"><strong>আসন সংখ্যা:</strong> {hallRoom.seatNumber}</p>
@@ -88,8 +89,20 @@ const PressClubMilonayoton = () => {
           </div>
         </div>
       ) : (
-        <div className="text-center text-gray-500">No venue details available.</div>
+        <div className="text-center text-gray-500 mb-8">No venue details available.</div>
       )}
+
+      {/* Contact Section */}
+      <div className="bg-blue-600 text-white p-6 rounded-lg shadow-lg text-center">
+        <h3 className="text-xl font-bold mb-2">যোগাযোগ</h3>
+        <p className="text-lg mb-2">ভাড়া নিতে যোগাযোগ করুন</p>
+        <a 
+          href="tel:+8801712939697" 
+          className="text-2xl font-bold underline hover:text-yellow-300 transition-colors"
+        >
+          +8801712939697
+        </a>
+      </div>
     </div>
   );
 };

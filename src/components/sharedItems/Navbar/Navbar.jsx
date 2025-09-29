@@ -89,7 +89,7 @@ const Navbar = () => {
                 {/* Text Content */}
                 <div className="flex flex-col">
                   <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight">
-                    নেত্রকোনা জেলা প্রেসক্লাব
+                    নেত্রকোণা জেলা প্রেসক্লাব
                   </h1>
                 </div>
               </div>

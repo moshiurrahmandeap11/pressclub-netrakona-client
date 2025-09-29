@@ -88,7 +88,7 @@ const HomeElement = () => {
               onClick={() => navigate("/committee")}
               className="cursor-pointer hover:underline"
             >
-              ম্যানেজিং কমিটি
+              কার্যকরী কমিটি
             </li>
           </ul>
         </div>

@@ -24,7 +24,7 @@ const Media = () => {
                 setLoading(true);
                 const response = await fetch('https://pressclub-netrakona-server.vercel.app/media');
                 if (!response.ok) {
-                    throw new Error('Failed to fetch media data');
+                    throw new Error('Failed to fetch সাংবাদিকবৃন্দ data');
                 }
                 const data = await response.json();
                 setMediaList(data);
@@ -40,8 +40,8 @@ const Media = () => {
     }, []);
 
     const tabs = [
-        { key: 'electronic', label: 'ইলেকট্রনিক মিডিয়া' },
-        { key: 'print', label: 'প্রিন্ট ও অনলাইন মিডিয়া' }
+        { key: 'electronic', label: 'ইলেকট্রনিক সাংবাদিকবৃন্দ' },
+        { key: 'print', label: 'প্রিন্ট ও অনলাইন সাংবাদিকবৃন্দ' }
     ];
 
     if (loading) {
@@ -62,7 +62,7 @@ const Media = () => {
         );
     }
 
-    // Filter media based on active tab and search term
+    // Filter সাংবাদিকবৃন্দ based on active tab and search term
     const filteredMedia = mediaList.filter(media => 
         media.type === activeTab && (
             media.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -84,7 +84,7 @@ const Media = () => {
             <div className="mb-6">
                 <input
                     type="text"
-                    placeholder="মিডিয়ার নাম, প্রতিনিধি, বা মোবাইল দিয়ে সার্চ করুন"
+                    placeholder="সাংবাদিকবৃন্দ নাম, প্রতিনিধি, বা মোবাইল দিয়ে সার্চ করুন"
                     className="w-full sm:w-1/2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -97,7 +97,7 @@ const Media = () => {
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-                                <th className="px-6 py-4 text-left text-sm font-semibold">মিডিয়ার নাম</th>
+                                <th className="px-6 py-4 text-left text-sm font-semibold">সাংবাদিকবৃন্দ নাম</th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold">জেলা প্রতিনিধি</th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold">মোবাইল</th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold">ইমেইল</th>
@@ -193,7 +193,7 @@ const Media = () => {
                 {/* Page Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
-                        মিডিয়া
+                        সাংবাদিকবৃন্দ
                     </h1>
                     <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
                 </div>
@@ -222,8 +222,8 @@ const Media = () => {
 
                 {/* Tab Content */}
                 <div className="min-h-[500px]">
-                    {activeTab === 'electronic' && renderMediaTable(filteredMedia, 'ইলেকট্রনিক মিডিয়া')}
-                    {activeTab === 'print' && renderMediaTable(filteredMedia, 'প্রিন্ট মিডিয়া')}
+                    {activeTab === 'electronic' && renderMediaTable(filteredMedia, 'ইলেকট্রনিক সাংবাদিকবৃন্দ')}
+                    {activeTab === 'print' && renderMediaTable(filteredMedia, 'প্রিন্ট সাংবাদিকবৃন্দ')}
                 </div>
             </div>
         </div>
